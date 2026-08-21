@@ -13,7 +13,7 @@
     body { font-family: "Segoe UI", Segoe, Tahoma, Geneva, Verdana, sans-serif; }
     /* Don't override Font Awesome (wifi, volume, etc.) */
     .fa, .fas, .far, .fab, .fa-solid, .fa-brands { font-family: "Font Awesome 6 Free", "Font Awesome 6 Brands" !important; }
-    .desktop-window { transition: left 0.2s ease, top 0.2s ease, right 0.2s ease, bottom 0.2s ease, width 0.2s ease, height 0.2s ease, min-height 0.2s ease; }
+    .desktop-window { transition: left 0.2s ease, top 0.2s ease; }
     .cmd-output { font-family: Consolas, "Courier New", monospace; font-weight: normal; }
     /* Dark mode: taskbar and overlay */
     body.dark-mode #taskbar { background: rgba(30, 41, 59, 0.95); border-top-color: rgba(51, 65, 85, 0.8); }
@@ -29,16 +29,16 @@
     /* Dark mode: desktop icon text white */
     body.dark-mode #desktop-icons-draggable .desktop-icon span { color: #f1f5f9 !important; }
     /* Light mode: tray icons and time black */
-    #tray-wifi i, #tray-volume i { color: #0f172a !important; }
+    #tray-wifi i, #tray-volume i, #tray-overflow i { color: #0f172a !important; }
     #tray-battery #battery-pct, #clock, #date { color: #0f172a !important; }
     /* Dark mode: tray icons (wifi, volume, battery) white */
-    body.dark-mode #tray-wifi i, body.dark-mode #tray-volume i { color: #f1f5f9 !important; }
+    body.dark-mode #tray-wifi i, body.dark-mode #tray-volume i, body.dark-mode #tray-overflow i { color: #f1f5f9 !important; }
     body.dark-mode #tray-battery #battery-pct, body.dark-mode #clock, body.dark-mode #date { color: #e2e8f0 !important; }
     body.dark-mode #tray-battery .battery-icon { border-color: #e2e8f0; }
     body.dark-mode #tray-battery .battery-icon span { background: #22c55e; }
     body.dark-mode #tray-battery #battery-pct { color: #e2e8f0; }
     /* Tray area hover: in dark mode same as Windows button (light highlight) */
-    body.dark-mode #tray-wifi:hover, body.dark-mode #tray-volume:hover, body.dark-mode #tray-battery:hover, body.dark-mode #tray-time:hover { background: rgba(255,255,255,0.15); border-radius: 4px; }
+    body.dark-mode #tray-wifi:hover, body.dark-mode #tray-volume:hover, body.dark-mode #tray-overflow:hover, body.dark-mode #tray-time:hover { background: rgba(255,255,255,0.15); border-radius: 4px; }
     body.dark-mode .volume-popover { background: #334155; border-color: #475569; }
     body.dark-mode #volume-pct { color: #e2e8f0 !important; }
     .volume-slider-thin { -webkit-appearance: none; appearance: none; height: 4px; background: #e2e8f0; border-radius: 2px; }
@@ -98,7 +98,9 @@
     body.dark-mode .desktop-window:not([data-window-id="welcome"]) .window-body p, body.dark-mode .desktop-window:not([data-window-id="welcome"]) .window-body li { color: #e2e8f0 !important; }
     body.dark-mode .desktop-window:not([data-window-id="welcome"]) .window-body a { color: #7dd3fc !important; }
     body.dark-mode .desktop-window:not([data-window-id="welcome"]) .notepad-editor { background: #0f172a !important; color: #e2e8f0 !important; }
-    body.dark-mode .desktop-window:not([data-window-id="welcome"]) .notepad-editor p, body.dark-mode .desktop-window:not([data-window-id="welcome"]) .notepad-editor li { color: #e2e8f0 !important; }
+    body.dark-mode .desktop-window:not([data-window-id="welcome"]) .notepad-editor p, body.dark-mode .desktop-window:not([data-window-id="welcome"]) .notepad-editor li,
+    body.dark-mode .desktop-window:not([data-window-id="welcome"]) .notepad-editor h1, body.dark-mode .desktop-window:not([data-window-id="welcome"]) .notepad-editor h2,
+    body.dark-mode .desktop-window:not([data-window-id="welcome"]) .notepad-editor h3 { color: #e2e8f0 !important; }
     body.dark-mode .desktop-window:not([data-window-id="welcome"]) .notepad-editor a { color: #7dd3fc !important; }
     body.dark-mode .desktop-window:not([data-window-id="welcome"]) .browser-toolbar { background: #1e293b !important; border-color: #475569 !important; }
     body.dark-mode .desktop-window:not([data-window-id="welcome"]) .browser-toolbar button { color: #e2e8f0 !important; }
@@ -142,16 +144,73 @@
     .notepad-tab .notepad-tab-close { width: 16px; height: 16px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; border-radius: 2px; color: #666; font-size: 10px; }
     .notepad-tab .notepad-tab-close:hover { background: #e5e5e5; color: #000; }
     .notepad-editor strong, .notepad-editor b { font-weight: 800; }
-    .window-resize-e, .window-resize-s, .window-resize-se { z-index: 5; }
-    /* Responsive: mobile = below md (768px) */
+    .notepad-editor h1 { font-weight: 700; margin-bottom: 0.5rem; }
+    .notepad-editor h2 { font-weight: 600; margin: 0.5rem 0 0.25rem; }
+    .notepad-editor h3 { font-weight: 600; margin: 0.4rem 0 0.2rem; }
+    .notepad-editor p { margin-bottom: 0.75rem; }
+    .notepad-editor ul { list-style: disc; padding-left: 1.25rem; margin-bottom: 0.75rem; }
+    .notepad-editor a { color: #2563eb; text-decoration: underline; }
+    .window-resize-e, .window-resize-s, .window-resize-se, .window-resize-w, .window-resize-n, .window-resize-nw, .window-resize-ne, .window-resize-sw { z-index: 5; }
+    .window-resize-w { position: absolute; left: 0; top: 0; bottom: 0; width: 6px; cursor: ew-resize; }
+    .window-resize-n { position: absolute; left: 0; right: 0; top: 0; height: 6px; cursor: ns-resize; }
+    .window-resize-nw { position: absolute; left: 0; top: 0; width: 10px; height: 10px; cursor: nwse-resize; z-index: 6; }
+    .window-resize-ne { position: absolute; right: 0; top: 0; width: 10px; height: 10px; cursor: nesw-resize; z-index: 6; }
+    .window-resize-sw { position: absolute; left: 0; bottom: 0; width: 10px; height: 10px; cursor: nesw-resize; z-index: 6; }
+    .about-hint { display: flex; align-items: flex-start; gap: 8px; background: #fff4ce; border: 1px solid #e0c36a; padding: 8px 10px; margin-bottom: 12px; font-weight: 600; }
+    .about-hint i { color: #c2410c; margin-top: 2px; flex-shrink: 0; }
+    body.dark-mode .about-hint { background: #3f3a24; border-color: #8a7a3d; color: #f1f5f9; }
+    body.dark-mode .about-hint i { color: #fbbf24; }
+    body:not(.dark-mode) #desktop-icons-draggable .desktop-icon {
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.18);
+    }
+    .win-dialog { width: 100%; max-width: 400px; background: #fff; border: 1px solid #8a8a8a; box-shadow: 0 12px 40px rgba(0,0,0,0.45); font-family: "Segoe UI", Segoe, Tahoma, sans-serif; }
+    .win-dialog-title { height: 32px; display: flex; align-items: center; justify-content: space-between; padding-left: 12px; font-size: 12px; color: #111; }
+    .win-dialog-title button { width: 46px; height: 32px; border: 0; background: transparent; cursor: pointer; font-size: 11px; color: #111; }
+    .win-dialog-title button:hover { background: #e81123; color: #fff; }
+    .win-dialog-body { display: flex; gap: 14px; padding: 18px 18px 10px; font-size: 13px; line-height: 1.5; color: #111; }
+    .win-error-x { width: 32px; height: 32px; border-radius: 50%; background: #e81123; color: #fff; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 16px; font-weight: 800; line-height: 1; }
+    .win-dialog-foot { display: flex; justify-content: flex-end; padding: 8px 12px 12px; }
+    .win-dialog-foot button { min-width: 88px; padding: 4px 16px; background: #e1e1e1; border: 1px solid #adadad; cursor: pointer; font-size: 13px; }
+    .win-dialog-foot button:hover { background: #d4d4d4; }
     @media (max-width: 767px) {
-      .desktop-window { max-width: 95vw !important; width: 95vw !important; min-height: 40vh !important; }
-      #desktop-wallpaper { background-image: none !important; background-color: #e5e7eb !important; }
-      #wallpaper-fallback { background: #e5e7eb !important; }
-      #desktop-icons-draggable { display: flex !important; flex-wrap: wrap; justify-content: center; align-content: flex-start; gap: 1rem; padding: 1rem; }
-      #desktop-icons-draggable .desktop-icon { position: relative !important; left: auto !important; top: auto !important; }
-      #desktop-icons-draggable .desktop-icon span { color: #111827 !important; }
-      #desktop-icons-draggable .desktop-icon-mobile-hide { display: none !important; }
+      #desktop-wallpaper { background-image: none !important; background-color: #000 !important; }
+      body.dark-mode #desktop-wallpaper { background-color: #000 !important; }
+      #wallpaper-fallback { display: none !important; }
+      #desktop-icons { padding: 0.75rem !important; }
+      #desktop-icons-draggable {
+        display: grid !important;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        justify-items: center;
+        align-content: start;
+        gap: 1rem 0.2rem;
+        padding: 0.75rem 0.35rem 1rem;
+        position: relative !important;
+      }
+      #desktop-icons-draggable .desktop-icon {
+        position: relative !important;
+        left: auto !important;
+        top: auto !important;
+        width: 100%;
+        max-width: 4.6rem;
+      }
+      #desktop-icons-draggable .desktop-icon span {
+        color: #111 !important;
+        text-shadow: none;
+        font-size: 11px;
+      }
+      body.dark-mode #desktop-icons-draggable .desktop-icon span { color: #f1f5f9 !important; }
+      body:not(.dark-mode) #desktop-icons-draggable .desktop-icon { background: #fff; }
+      .desktop-window:not(.maximized) { max-width: 95vw !important; width: 95vw !important; }
+      .desktop-window.maximized { max-width: none !important; width: 100% !important; min-height: 0 !important; }
+      .desktop-icon { touch-action: manipulation; }
+      #start-btn { display: flex !important; }
+      #start-menu { left: 8px; right: 8px; width: auto; max-width: none; }
+      #start-menu-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); max-height: 50vh; overflow-y: auto; }
+      .notepad-editor { font-size: 15px; }
+      .resume-iframe { min-height: 0 !important; height: 100% !important; width: 100% !important; }
+      .resume-window-body { overflow: auto !important; }
     }
   </style>
 </head>
@@ -174,9 +233,25 @@
     </div>
   </div>
 
+  <div id="mobile-warning" class="fixed inset-0 z-[200] hidden items-center justify-center bg-black/45 p-5">
+    <div class="win-dialog">
+      <div class="win-dialog-title">
+        <span>Steven's Portfolio</span>
+        <button type="button" class="mobile-warning-ok" aria-label="Close">&#x2715;</button>
+      </div>
+      <div class="win-dialog-body">
+        <div class="win-error-x" aria-hidden="true">&#x2715;</div>
+        <p>This portfolio is a rendition of a Windows desktop interface. For the full experience, please view it on a desktop or laptop. You can continue on mobile, if you wish.</p>
+      </div>
+      <div class="win-dialog-foot">
+        <button type="button" class="mobile-warning-ok">OK</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Desktop (hidden until after login) -->
   <div id="desktop" class="fixed inset-0 flex flex-col hidden">
-    <!-- Wallpaper: stop-motion animation from BG_LIGHT / BG_DARK arrays (set by JS) -->
+    <!-- wallpaper frames are rotated by js/main.js -->
     <div id="desktop-wallpaper" class="absolute inset-0 bg-cover bg-center bg-no-repeat bg-white" style="background-image: url('images/bg-light-1.png');"></div>
     <div class="absolute inset-0 bg-gradient-to-br from-blue-900/80 via-indigo-900/60 to-slate-900/80" id="wallpaper-fallback"></div>
 
@@ -199,7 +274,7 @@
           <img src="images/icons/vscode.png" alt="GitHub" class="icon-custom w-14 h-14 object-contain drop-shadow-lg group-hover:brightness-110 transition" />
           <span class="text-black text-sm text-center mt-2 drop-shadow-lg font-normal">My Code</span>
         </div>
-        <div class="desktop-icon draggable-icon desktop-icon-mobile-hide flex flex-col items-center w-20 cursor-pointer group rounded-sm p-1 pointer-events-auto" data-window="linkedin" data-icon-id="linkedin">
+        <div class="desktop-icon draggable-icon flex flex-col items-center w-20 cursor-pointer group rounded-sm p-1 pointer-events-auto" data-window="linkedin" data-icon-id="linkedin">
           <img src="images/icons/linkedin.png" alt="LinkedIn" class="icon-custom w-14 h-14 object-contain drop-shadow-lg group-hover:brightness-110 transition" />
           <span class="text-black text-sm text-center mt-2 drop-shadow-lg font-normal">LinkedIn</span>
         </div>
@@ -211,7 +286,7 @@
           <img src="images/icons/one.png" alt="CarryTheOne" class="icon-custom w-14 h-14 object-contain drop-shadow-lg group-hover:brightness-110 transition" />
           <span class="text-black text-sm text-center mt-2 drop-shadow-lg font-normal">CarryTheOne</span>
         </div>
-        <div class="desktop-icon draggable-icon desktop-icon-mobile-hide flex flex-col items-center w-20 cursor-pointer group rounded-sm p-1 pointer-events-auto" data-window="dxdy" data-icon-id="dxdy">
+        <div class="desktop-icon draggable-icon flex flex-col items-center w-20 cursor-pointer group rounded-sm p-1 pointer-events-auto" data-window="dxdy" data-icon-id="dxdy">
           <img src="images/icons/calculator.png" alt="dxdy" class="icon-custom w-14 h-14 object-contain drop-shadow-lg group-hover:brightness-110 transition" />
           <span class="text-black text-sm text-center mt-2 drop-shadow-lg font-normal">dxdy</span>
         </div>
@@ -237,7 +312,7 @@
           <img src="images/icons/edge.png" alt="Edge" class="icon-custom w-14 h-14 object-contain drop-shadow-lg group-hover:brightness-110 transition" />
           <span class="text-black text-sm text-center mt-2 drop-shadow-lg font-normal">Edge</span>
         </div>
-        <div id="theme-toggle" class="desktop-icon mode-icon draggable-icon flex flex-col items-center w-20 cursor-pointer group rounded-sm p-1 pointer-events-auto hidden md:flex" data-icon-id="theme" title="Double-click to switch theme">
+        <div id="theme-toggle" class="desktop-icon mode-icon draggable-icon flex flex-col items-center w-20 cursor-pointer group rounded-sm p-1 pointer-events-auto" data-icon-id="theme" title="Double-click to switch theme">
           <img id="theme-toggle-img" src="images/icons/moon.png" alt="" class="icon-custom w-14 h-14 object-contain drop-shadow-lg group-hover:brightness-110 transition" />
           <span id="theme-toggle-label" class="text-black text-sm text-center mt-2 drop-shadow-lg font-normal">Dark mode</span>
         </div>
@@ -249,21 +324,21 @@
       <div class="absolute inset-0 pb-[56px] pointer-events-none" id="windows-area"></div>
     </div>
 
-    <!-- Taskbar: on mobile hide Windows icon and tray (time/wifi/battery/sound) -->
+    <!-- Taskbar -->
     <div id="taskbar" class="relative h-14 bg-white/90 border-t border-slate-200/80 flex items-center px-3 z-[9999] backdrop-blur-sm">
-      <button type="button" id="start-btn" class="hidden md:flex items-center justify-center w-12 h-12 flex-shrink-0 rounded-md hover:bg-black/5 transition-colors cursor-pointer border-0 bg-transparent p-0">
+      <button type="button" id="start-btn" class="flex items-center justify-center w-12 h-12 flex-shrink-0 rounded-md hover:bg-black/5 transition-colors cursor-pointer border-0 bg-transparent p-0">
         <img src="images/icons/windows11.webp" alt="Windows Logo" class="w-6 h-6 object-contain" />
       </button>
       <div id="taskbar-apps" class="absolute left-1/2 -translate-x-1/2 flex items-center gap-1">
-        <button type="button" class="taskbar-app w-12 h-12 flex items-center justify-center rounded-md hover:bg-black/5 transition-colors" data-window="about" title="About Me"><img src="images/icons/fileexplorer.png" alt="" class="w-6 h-6 object-contain" /></button>
-        <button type="button" class="taskbar-app w-12 h-12 flex items-center justify-center rounded-md hover:bg-black/5 transition-colors" data-window="contact" title="Contact"><img src="images/icons/outlook.png" alt="" class="w-6 h-6 object-contain" /></button>
-        <button type="button" class="taskbar-app w-12 h-12 flex items-center justify-center rounded-md hover:bg-black/5 transition-colors" data-window="resume" title="Resume"><img src="images/icons/notepad.png" alt="" class="w-6 h-6 object-contain" /></button>
-        <button type="button" class="taskbar-app w-12 h-12 flex items-center justify-center rounded-md hover:bg-black/5 transition-colors" data-window="github" title="GitHub"><img src="images/icons/vscode.png" alt="" class="w-6 h-6 object-contain" /></button>
+        <button type="button" class="taskbar-app w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-md hover:bg-black/5 transition-colors" data-window="about" title="About Me"><img src="images/icons/fileexplorer.png" alt="" class="w-6 h-6 object-contain" /></button>
+        <button type="button" class="taskbar-app w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-md hover:bg-black/5 transition-colors" data-window="contact" title="Contact"><img src="images/icons/outlook.png" alt="" class="w-6 h-6 object-contain" /></button>
+        <button type="button" class="taskbar-app w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-md hover:bg-black/5 transition-colors" data-window="resume" title="Resume"><img src="images/icons/notepad.png" alt="" class="w-6 h-6 object-contain" /></button>
+        <button type="button" class="taskbar-app w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-md hover:bg-black/5 transition-colors" data-window="github" title="GitHub"><img src="images/icons/vscode.png" alt="" class="w-6 h-6 object-contain" /></button>
       </div>
-      <div class="hidden md:flex items-center gap-1 text-slate-700 ml-auto">
-        <span id="tray-wifi" class="system-tray-icon relative flex items-center justify-center w-6 h-6 rounded hover:bg-black/5 cursor-pointer"><i class="fa-solid fa-wifi text-[12px] text-slate-600"></i></span>
-        <span id="tray-volume" class="system-tray-icon relative flex items-center justify-center w-6 h-6 rounded cursor-pointer"><i class="fa-solid fa-volume-high text-[12px] text-slate-600"></i><div id="volume-popover" class="volume-popover hidden absolute w-52 bg-white rounded-lg shadow-xl border border-slate-200 p-4 z-[100]"><div class="flex items-center gap-3"><input type="range" id="volume-slider" min="0" max="100" value="70" class="volume-slider-thin flex-1 h-1 accent-black" /><span id="volume-pct" class="text-sm font-medium text-slate-800 w-10 text-right">70%</span></div></div></span>
-        <span id="tray-battery" class="system-tray-icon relative flex items-center gap-1.5 w-auto rounded hover:bg-black/5 cursor-default py-0.5 pr-1"><span class="battery-icon inline-block w-5 h-3 border-2 border-black rounded-[3.5px] relative"><span class="absolute inset-[2px] rounded-[3.5px] bg-green-600" style="width:67%"></span></span><span id="battery-pct" class="text-[11px] font-medium text-slate-700">67%</span></span>
+      <div class="flex items-center gap-1 text-slate-700 ml-auto">
+        <span id="tray-overflow" class="hidden md:flex system-tray-icon relative items-center justify-center w-6 h-6 rounded hover:bg-black/5 cursor-default" title="Show hidden icons"><i class="fa-solid fa-chevron-up text-[10px] text-slate-600"></i></span>
+        <span id="tray-wifi" class="hidden md:flex system-tray-icon relative items-center justify-center w-6 h-6 rounded hover:bg-black/5 cursor-default" title="Connected to Steven's Network"><i class="fa-solid fa-wifi text-[12px] text-slate-600"></i></span>
+        <span id="tray-volume" class="hidden md:flex system-tray-icon relative items-center justify-center w-6 h-6 rounded cursor-pointer"><i class="fa-solid fa-volume-high text-[12px] text-slate-600"></i><div id="volume-popover" class="volume-popover hidden absolute w-52 bg-white rounded-lg shadow-xl border border-slate-200 p-4 z-[100]"><div class="flex items-center gap-3"><input type="range" id="volume-slider" min="0" max="100" value="70" class="volume-slider-thin flex-1 h-1 accent-black" /><span id="volume-pct" class="text-sm font-medium text-slate-800 w-10 text-right">70%</span></div></div></span>
         <div id="tray-time" class="tray-time-cluster relative flex flex-col items-end justify-center pr-3 pl-3 ml-1 text-right cursor-pointer rounded hover:bg-black/5 py-1 pr-2">
           <span id="clock" class="text-[11px] font-medium leading-tight">--:--</span>
           <span id="date" class="text-[11px] font-medium leading-tight">--</span>
@@ -315,7 +390,7 @@
         </div>
       </div>
       <div class="window-body flex-1 min-h-0 p-0 bg-white overflow-hidden flex flex-col resume-window-body">
-        <iframe src="resume.pdf#toolbar=0&amp;navpanes=0" class="w-full flex-1 min-h-[600px] border-0 bg-white resume-iframe" title="Resume PDF"></iframe>
+        <iframe src="resume.pdf#toolbar=0&amp;navpanes=0&amp;view=FitH" class="w-full flex-1 min-h-0 md:min-h-[600px] border-0 bg-white resume-iframe" title="Resume PDF"></iframe>
       </div>
       <div class="window-resize-e w-1.5 right-0 top-0 bottom-0 absolute cursor-ew-resize"></div>
       <div class="window-resize-s left-0 right-0 bottom-0 h-1.5 absolute cursor-ns-resize"></div>
@@ -323,14 +398,14 @@
     </div>
   </script>
 
-  <!-- Single notepad container: content injected from NOTEPAD_CONTENT[id] -->
+  <!-- notepad template; body loaded from notepad/*.md -->
   <script type="text/template" id="window-notepad">
-    <div class="desktop-window notepad-window absolute w-[95vw] max-w-[800px] min-h-[50vh] md:min-h-[540px] flex flex-col rounded-t-lg overflow-hidden bg-[#fafafa] border border-slate-300 shadow-2xl pointer-events-auto resize-handles" data-window-id="NOTEPAD_ID">
+    <div class="desktop-window notepad-window absolute w-[95vw] max-w-[960px] min-h-[50vh] md:min-h-[540px] flex flex-col rounded-t-lg overflow-hidden bg-[#fafafa] border border-slate-300 shadow-2xl pointer-events-auto resize-handles" data-window-id="NOTEPAD_ID">
       <div class="window-titlebar flex items-stretch h-9 bg-[#e8e8e8] border-b border-slate-300 cursor-move flex-shrink-0">
         <img src="images/icons/notepad.png" class="w-5 h-5 self-center ml-2 flex-shrink-0 object-contain" alt="" />
         <div class="notepad-tab-wrap">
           <div class="notepad-tab">
-            <span class="notepad-tab-label truncate">untitled.txt</span>
+            <span class="notepad-tab-label truncate">untitled.md</span>
             <button type="button" class="notepad-tab-close" aria-label="Close">&#x2715;</button>
           </div>
         </div>
@@ -356,7 +431,7 @@
       <div class="notepad-statusbar flex items-center h-6 bg-[#e8e8e8] border-t border-slate-300 px-2 text-xs text-slate-700 flex-shrink-0">
         <span class="notepad-ln-col">Ln 1, Col 1</span>
         <span class="border-l border-slate-400 pl-2 ml-2 notepad-chars">0 characters</span>
-        <span class="border-l border-slate-400 pl-2 ml-2">Plain text</span>
+        <span class="border-l border-slate-400 pl-2 ml-2">Markdown</span>
         <span class="border-l border-slate-400 pl-2 ml-2">100%</span>
         <span class="border-l border-slate-400 pl-2 ml-2">Unix (LF)</span>
         <span class="border-l border-slate-400 pl-2 ml-2">UTF-8</span>
@@ -601,871 +676,7 @@
     </div>
   </script>
 
-  <script>
-    $(function () {
-      var $area = $('#windows-area');
-      var $desktop = $('#desktop');
-      var windowOffset = { x: 40, y: 40 };
-      var zIndex = 100;
-      var TASKBAR_H = 56;
-      var openWindows = {};
-      var aboutClosedOnce = false;
-      var GITHUB_URL = 'https://github.com/5txvn';
-      var RESUME_URL = '/resume.pdf';
-      var LINKEDIN_URL = 'https://www.linkedin.com/in/steven-livingston-b599482b5/';
-      var bgMusic = null;
-
-      // Wallpaper options for Settings (add your PNG/JPG filenames here; paths relative to images/)
-      var WALLPAPER_OPTIONS = ['bg.png', 'bg-test.png', 'wallpaper.png', 'wallpaper-alt.jpg'];
-
-      // Stop-motion background: sequential frames (add more paths as needed)
-      var BG_LIGHT = ['images/bg-light-1.png', 'images/bg-light-2.png'];
-      var BG_DARK = ['images/bg-dark-1.png', 'images/bg-dark-2.png'];
-      var BACKGROUND_INTERVAL_MS = 500;
-      var backgroundIntervalId = null;
-      var bgLightIndex = 0;
-      var bgDarkIndex = 0;
-      var backgroundPreloaded = false;
-
-      function preloadBackgrounds(callback) {
-        var all = BG_LIGHT.concat(BG_DARK);
-        if (all.length === 0) { callback(); return; }
-        var loaded = 0;
-        function onLoad() {
-          loaded++;
-          if (loaded >= all.length) { backgroundPreloaded = true; callback(); }
-        }
-        for (var i = 0; i < all.length; i++) {
-          var img = new Image();
-          img.onload = onLoad;
-          img.onerror = onLoad;
-          img.src = all[i];
-        }
-      }
-
-      function setDesktopWallpaperFromArray() {
-        var isDark = $('body').hasClass('dark-mode');
-        var arr = isDark ? BG_DARK : BG_LIGHT;
-        if (!arr.length) return;
-        var idx = isDark ? bgDarkIndex : bgLightIndex;
-        var url = arr[idx];
-        
-        var img = new Image();
-        img.onload = function () {
-          $('#desktop-wallpaper').css('background-image', "url('" + url + "')");
-        };
-        img.src = url;
-
-        if (isDark) {
-          bgDarkIndex = (bgDarkIndex + 1) % arr.length;
-        } else {
-          bgLightIndex = (bgLightIndex + 1) % arr.length;
-        }
-      }
-
-      function startBackgroundRotation() {
-        if (backgroundIntervalId) clearInterval(backgroundIntervalId);
-        if (!backgroundPreloaded) {
-          preloadBackgrounds(function () {
-            setDesktopWallpaperFromArray();
-            backgroundIntervalId = setInterval(setDesktopWallpaperFromArray, BACKGROUND_INTERVAL_MS);
-          });
-          return;
-        }
-        setDesktopWallpaperFromArray();
-        backgroundIntervalId = setInterval(setDesktopWallpaperFromArray, BACKGROUND_INTERVAL_MS);
-      }
-
-      // Projects: url and title for browser(); notepad has "Have a peek" link.
-      var PROJECTS = {
-        spellingtree:   { title: 'SpellingTree',   url: 'https://spellingtree.org',   icon: 'translate.png' },
-        carrytheone:   { title: 'CarryTheOne',    url: 'https://5txvn.github.io/carrytheone', icon: 'one.png' },
-        dxdy:          { title: 'dxdy',           url: 'https://dxdy-m2c7.onrender.com', icon: 'calculator.png' },
-        slink:         { title: 'Slink',          url: 'https://sem-link.org',          icon: 'slink.png' },
-        knowurschist:  { title: 'KnowUrSchist',   url: 'https://5txvn.github.io/knowurschist', icon: 'petri-dish.png' }
-      };
-      var NOTEPAD_IDS = ['spellingtree', 'carrytheone', 'dxdy', 'slink', 'knowurschist', 'about', 'contact'];
-      var NOTEPAD_CONTENT = {
-        about: { tabLabel: 'about.txt', bodyHtml: '<p class="mb-2 font-bold">About Me</p><p class="mb-3">Hi, I\'m <strong>Steven</strong>! I\'m currently a senior at the School of Science and Engineering in Dallas, Texas. I intend to major in applied mathematics and plan to commit to the University of Chicago. I\'ve been a self-taught web developer since 6th grade, and here\'s some things I like to do:</p><ul class="list-disc pl-5 mb-3 space-y-0.5"><li><strong>Music:</strong> I love listening to a wide variety of music and even do some personal production work in my free time.</li><li><strong>Mathematics:</strong> Node.js, APIs, and server logic</li><li><strong>Tools:</strong> Git, VS Code, and the terminal</li></ul><p class="font-semibold mb-1">What I like</p><ul class="list-disc pl-5 mb-2"><li>Listening to & producing music</li><li>Building websites (like this one!)</li><li>Videography & photography</li><li>Clear code and good UX</li><li>Learning new stacks and side projects</li></ul><p class="font-semibold mb-1">Fun fact</p><p class="mb-2">Double-click desktop icons to open apps; drag them to rearrange!</p>' },
-        contact: { tabLabel: 'contact.txt', bodyHtml: '<p class="mb-2 font-bold">Contact</p><p class="mb-3">Get in touch for projects, collaboration, or just to say hi!</p><ul class="list-disc pl-5 mb-3 space-y-0.5"><li><strong>Email:</strong> <a href="mailto:steven.livingston.mathcomp@gmail.com" class="text-blue-600 hover:underline">steven.livingston.mathcomp@gmail.com</a></li><li><strong>GitHub:</strong> <a href="https://github.com/5txvn" class="text-blue-600 hover:underline" target="_blank" rel="noopener">github.com/5txvn</a></li><li><strong>Resume:</strong> Double-click the Resume icon on the desktop to open the PDF.</li></ul>' },
-        spellingtree: { tabLabel: 'spellingtree.txt', bodyHtml: '<p class="mb-2 font-bold">Spelling Tree 🌳</p><p class="mb-3">Spelling Tree is by far my largest project to date and is designed to be a full-stack web app to aid competitive spellers across Texas (and also those preparing for spelling/vocabulary tests in school) to better their spelling and vocabulary skills. The site features classrooms that teachers can create to communicate with students, custom spelling/vocabulary list creation features, and a variety of different game modes (including multiplayer) to practice spelling. The site was built using Express, MongoDB, Socket.io, Tailwind, jQuery, and more. Additionally, our high school\'s spelling team recently placed 2nd at UIL state our first year competing with the help of the site, and we hope to win state soon :)</p><p><a href="https://spellingtree.org" class="project-open-link underline cursor-pointer text-slate-800" target="_blank" rel="noopener">Open project in a new tab</a></p>' },
-        carrytheone: { tabLabel: 'carrytheone.txt', bodyHtml: '<p class="mb-2 font-bold">CarryTheOne 1️⃣</p><p class="mb-3">Carry the One is a fully frontend, open-source project developed by me using jQuery and Tailwind to serve as a wiki for UIL Number Sense. It features hand-written explanations for over 100 tricks and I plan to add problem generators for each trick in the near future as well. Please refer to the about page on the site for instructions on how you can contribute to the project. Any help is much appreciated!</p><p><a href="https://5txvn.github.io/carrytheone" class="project-open-link underline cursor-pointer text-slate-800" target="_blank" rel="noopener">Open project in a new tab</a></p>' },
-        dxdy: { tabLabel: 'dxdy.txt', bodyHtml: '<p class="mb-2 font-bold">dxdy 📐</p><p class="mb-3">dxdy is a multiplayer, live UTA Calculus Bowl training game built by me using Express, Node, and Socket.io. The questions used are all legitimate past Calculus Bowl questions that have been typesetted from Word documents using a custom Gemini script.</p><p><a href="https://dxdy-m2c7.onrender.com" class="project-open-link underline cursor-pointer text-slate-800" target="_blank" rel="noopener">Open project in a new tab</a></p>' },
-        slink: { tabLabel: 'slink.txt', bodyHtml: '<p class="mb-2 font-bold">Slink 🔗</p><p class="mb-3">Slink is an alumni connection database that I made for my high school using Node.js, Express, and MongoDB as well as Tailwind and jQuery for the frontend. The project is currently a work in progress and I\'m attempting to roll it out.</p><p><a href="https://sem-link.org" class="project-open-link underline cursor-pointer text-slate-800" target="_blank" rel="noopener">Open project in a new tab</a></p>' },
-        knowurschist: { tabLabel: 'knowurschist.txt', bodyHtml: '<p class="mb-2 font-bold">KnowUrSchist 🧫</p><p class="mb-3">KnowUrSchist is a site developed by my brother Jonathan and I to help UIL Science competitors learn more efficiently. It is fully frontend, built with jQuery and Tailwind, and has features such as formulas sheets developed by me, flashcards for biology vocabulary, and a bank of thousands of questions from past tests organized by topic. Furthermore, the site utilized the Groq API to provide AI explanations for various questions and problems to expedite learning. If you are interested in contributing to the question bank, please reach out to me via email!</p><p><a href="https://5txvn.github.io/knowurschist" class="project-open-link underline cursor-pointer text-slate-800" target="_blank" rel="noopener">Open project in a new tab</a></p>' }
-      };
-
-      function getNotepadCaretLineCol(editableEl) {
-        var sel = window.getSelection();
-        if (!sel.rangeCount) return { line: 1, col: 1 };
-        try {
-          var range = sel.getRangeAt(0).cloneRange();
-          range.selectNodeContents(editableEl);
-          range.setEnd(sel.anchorNode, sel.anchorOffset);
-          var text = range.toString();
-          var lines = text.split('\n');
-          return { line: Math.max(1, lines.length), col: (lines[lines.length - 1] || '').length + 1 };
-        } catch (e) { return { line: 1, col: 1 }; }
-      }
-
-      function initNotepad($win) {
-        var id = $win.attr('data-window-id');
-        var $editor = $win.find('.notepad-editor');
-        var $lnCol = $win.find('.notepad-ln-col');
-        var $chars = $win.find('.notepad-chars');
-        if (!$editor.length || !$lnCol.length || !$chars.length) return;
-        var defaultHtml = $editor.html();
-        $win.data('notepad-default', defaultHtml);
-
-        function updateStatus() {
-          var el = $editor[0];
-          var text = (el.innerText || el.textContent || '').replace(/\r\n/g, '\n').replace(/\r/g, '\n');
-          var total = text.length;
-          var lc = getNotepadCaretLineCol(el);
-          $lnCol.text('Ln ' + lc.line + ', Col ' + lc.col);
-          $chars.text(total.toLocaleString() + ' character' + (total !== 1 ? 's' : ''));
-        }
-
-        function moveCaretToEnd() {
-          var el = $editor[0];
-          var sel = window.getSelection();
-          var range = document.createRange();
-          range.selectNodeContents(el);
-          range.collapse(false);
-          sel.removeAllRanges();
-          sel.addRange(range);
-          updateStatus();
-        }
-
-        $editor.on('input', updateStatus);
-        $win.data('notepad-initial-focus-done', false);
-        setTimeout(function () {
-          if ($win.data('notepad-initial-focus-done')) return;
-          $win.data('notepad-initial-focus-done', true);
-          $editor[0].focus();
-          moveCaretToEnd();
-        }, 50);
-        document.addEventListener('selectionchange', function () {
-          if ($editor[0] && document.activeElement === $editor[0]) updateStatus();
-        });
-        updateStatus();
-
-        $win.find('.notepad-bold').on('click', function (e) {
-          e.preventDefault();
-          $editor[0].focus();
-          document.execCommand('bold', false, null);
-        });
-        $win.find('.notepad-italic').on('click', function (e) {
-          e.preventDefault();
-          $editor[0].focus();
-          document.execCommand('italic', false, null);
-        });
-
-        function restoreContent() {
-          $editor.html($win.data('notepad-default'));
-          if (PROJECTS[id]) {
-            $win.find('.project-open-link').off('click').on('click', function (e) { e.preventDefault(); var u = $(this).attr('href'); if (u && u !== '#') window.open(u, '_blank'); });
-          }
-          updateStatus();
-        }
-
-        $win.find('.notepad-refresh').on('click', restoreContent);
-        $win.find('.notepad-tab-close').on('click', function () {
-          restoreContent();
-          $win.addClass('hidden');
-        });
-      }
-
-      function browser(url, title) {
-        var id = 'browser-' + Date.now();
-        var $tmpl = $('#window-browser');
-        if (!$tmpl.length) return;
-        var $new = $($tmpl.html());
-        $new.attr('data-window-id', id);
-        $new.find('.browser-title').text(title || 'New Tab');
-        var $iframe = $new.find('.browser-iframe');
-        var $directory = $new.find('.browser-directory');
-        var currentUrl = url || '';
-        var showDirectory = !url;
-        if (showDirectory) {
-          $iframe.addClass('hidden');
-          $directory.removeClass('hidden').html('<h2 class="text-lg font-semibold text-slate-800 mb-4">Projects on this site</h2><div class="grid grid-cols-2 sm:grid-cols-3 gap-3">' + Object.keys(PROJECTS).map(function (k) { var p = PROJECTS[k]; var icon = p.icon ? 'images/icons/' + p.icon : ''; return '<button type="button" class="browser-directory-link flex flex-col items-center justify-center p-4 rounded-lg border-2 border-slate-200 hover:border-blue-500 hover:bg-slate-100 transition-colors text-slate-800" data-url="' + p.url + '" data-title="' + (p.title || k) + '"><img src="' + icon + '" alt="" class="w-12 h-12 object-contain mb-2" onerror="this.style.display=\'none\'"/><span class="text-sm font-medium text-center">' + (p.title || k) + '</span></button>'; }).join('') + '</div>');
-          $new.find('.browser-url-bar').val('').attr('placeholder', 'Projects only');
-          $directory.find('.browser-directory-link').on('click', function (e) { e.preventDefault(); var u = $(this).data('url'), t = $(this).data('title'); if (u) { $iframe.attr('src', u).removeClass('hidden'); $directory.addClass('hidden'); $new.find('.browser-url-bar').val(u); currentUrl = u; $new.find('.browser-title').text(t); } });
-        } else {
-          $iframe.attr('src', url);
-          $new.find('.browser-url-bar').val(currentUrl);
-        }
-        $new.find('.browser-url-bar').removeAttr('readonly').on('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); var u = $(this).val().trim(); if (u && !/^https?:\/\//i.test(u)) u = 'https://' + u; if (u) { $iframe.attr('src', u).removeClass('hidden'); $directory.addClass('hidden'); currentUrl = u; } } });
-        var x = windowOffset.x + (($area.find('.desktop-window').length % 4) * 30);
-        var y = windowOffset.y + (($area.find('.desktop-window').length % 4) * 28);
-        $new.css({ left: x + 'px', top: y + 'px', zIndex: zIndex++ });
-        if (!url) {
-          var taskbarH = 56;
-          var pageW = window.innerWidth;
-          var pageH = window.innerHeight - taskbarH;
-          var bw = Math.floor(pageW * 0.65);
-          var bh = Math.floor(pageH * 0.72);
-          var bx = Math.floor((pageW - bw) / 2);
-          var by = Math.floor((pageH - bh) / 2);
-          $new.css({ left: bx + 'px', top: by + 'px', width: bw + 'px', minHeight: bh + 'px', height: bh + 'px', maxWidth: 'none', maxHeight: 'none' });
-        }
-        $area.append($new);
-        makeDraggable($new);
-        makeResizable($new);
-        bindWindowButtons($new);
-        $new.on('mousedown', function () { bringToFront($(this)); });
-        $new.find('.browser-btn-refresh').on('click', function () { var src = $iframe.attr('src'); if (src) { $iframe[0].src = ''; $iframe[0].src = src; } });
-        $new.find('.browser-btn-back').on('click', function () {
-          currentUrl = '';
-          $iframe.attr('src', '').addClass('hidden');
-          $directory.html('<h2 class="text-lg font-semibold text-slate-800 mb-4">Projects on this site</h2><div class="grid grid-cols-2 sm:grid-cols-3 gap-3">' + Object.keys(PROJECTS).map(function (k) { var p = PROJECTS[k]; var icon = p.icon ? 'images/icons/' + p.icon : ''; return '<button type="button" class="browser-directory-link flex flex-col items-center justify-center p-4 rounded-lg border-2 border-slate-200 hover:border-blue-500 hover:bg-slate-100 transition-colors text-slate-800" data-url="' + p.url + '" data-title="' + (p.title || k) + '"><img src="' + icon + '" alt="" class="w-12 h-12 object-contain mb-2" onerror="this.style.display=\'none\'"/><span class="text-sm font-medium text-center">' + (p.title || k) + '</span></button>'; }).join('') + '</div>');
-          $directory.find('.browser-directory-link').on('click', function (e) { e.preventDefault(); var u = $(this).data('url'), t = $(this).data('title'); if (u) { $iframe.attr('src', u).removeClass('hidden'); $directory.addClass('hidden'); $new.find('.browser-url-bar').val(u); currentUrl = u; $new.find('.browser-title').text(t); } });
-          $directory.removeClass('hidden');
-          $new.find('.browser-url-bar').val('').attr('placeholder', 'Projects only');
-          $new.find('.browser-title').text('New Tab');
-        });
-        $new.find('.browser-btn-forward').on('click', function () { try { if (currentUrl && $iframe[0].contentWindow) $iframe[0].contentWindow.history.forward(); } catch (err) {} });
-      }
-
-      function updateThemeButton() {
-        var isDark = $('body').hasClass('dark-mode');
-        $('#theme-toggle-label').text(isDark ? 'Light mode' : 'Dark mode');
-        $('#theme-toggle-img').attr('src', isDark ? 'images/icons/sun.png' : 'images/icons/moon.png').attr('alt', isDark ? 'Light mode' : 'Dark mode');
-      }
-
-      // Wallpaper fallback (hide gradient when first background image loads)
-      var img = new Image();
-      img.onload = function () { $('#wallpaper-fallback').addClass('hidden'); };
-      img.src = BG_LIGHT[0] || 'images/bg-light-1.png';
-
-      // Restore theme: default to light when user has not set a preference (e.g. after first auth)
-      var savedTheme = localStorage.getItem('portfolio-theme');
-      if (savedTheme === 'dark') { $('body').addClass('dark-mode'); }
-      else if (!savedTheme) { try { localStorage.setItem('portfolio-theme', 'light'); } catch (e) {} }
-      updateThemeButton();
-      if (!$('#desktop').hasClass('hidden')) startBackgroundRotation();
-
-      // Login screen: light mode by default whenever user authenticates
-      function dismissLogin() {
-        $('body').removeClass('dark-mode');
-        try { localStorage.setItem('portfolio-theme', 'light'); } catch (e) {}
-        updateThemeButton();
-        $('#login-screen').addClass('hidden');
-        $('#desktop').removeClass('hidden');
-        if (document.documentElement.requestFullscreen) document.documentElement.requestFullscreen().catch(function () {});
-        try {
-          bgMusic = new Audio('bg-music.mp3');
-          bgMusic.loop = true;
-          bgMusic.volume = 0.7;
-          bgMusic.play().catch(function () {});
-          $('#volume-slider').val(70);
-        } catch (e) {}
-        if (window.innerWidth >= 768) {
-          startBackgroundRotation();
-          openWindow('about');
-          openWindow('welcome');
-          var $welcome = $area.find('[data-window-id="welcome"]');
-          var $about = $area.find('[data-window-id="about"]');
-          if ($welcome.length) {
-            $welcome.css({ left: 'auto', right: '24px', top: '24px', marginLeft: '', marginTop: '' });
-          }
-          if ($about.length) {
-            $about.css({ left: '24px', top: 'auto', bottom: '88px' });
-          }
-        }
-      }
-      $('#login-enter-btn').on('click', dismissLogin);
-      $(document).on('keydown', function (e) {
-        if (!$('#login-screen').hasClass('hidden') && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); dismissLogin(); }
-      });
-
-      $('#theme-toggle').on('dblclick', function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-        if ($('body').hasClass('dark-mode')) {
-          $('body').removeClass('dark-mode');
-          localStorage.setItem('portfolio-theme', 'light');
-        } else {
-          $('body').addClass('dark-mode');
-          localStorage.setItem('portfolio-theme', 'dark');
-        }
-        updateThemeButton();
-        if (!$('#desktop').hasClass('hidden')) startBackgroundRotation();
-      });
-
-      // --- Draggable desktop icons: load positions, apply, and enable drag ---
-      var DEFAULT_ICON_POS = { about: [24,24], contact: [124,24], resume: [224,24], github: [324,24], linkedin: [424,24], spellingtree: [24,140], slink: [124,140], dxdy: [224,140], carrytheone: [324,140], knowurschist: [424,140], settings: [24,256], edge: [124,256], theme: [224,256] };
-      var iconPositions = {};
-      try { iconPositions = JSON.parse(localStorage.getItem('desktop-icon-positions') || '{}'); } catch (err) {}
-      var $container = $('#desktop-icons-draggable');
-      $('.draggable-icon').each(function () {
-        var id = $(this).data('icon-id');
-        var pos = iconPositions[id] || DEFAULT_ICON_POS[id] || [24, 24];
-        $(this).css({ position: 'absolute', left: pos[0] + 'px', top: pos[1] + 'px' });
-      });
-      var iconDragging = false, iconDragStartX, iconDragStartY, iconStartLeft, iconStartTop, $iconDragged, justDraggedIcon = false;
-      $container.on('mousedown', '.draggable-icon', function (e) {
-        if (e.which !== 1) return;
-        var $icon = $(this);
-        if ($icon.hasClass('mode-icon')) return;
-        var r = $icon[0].getBoundingClientRect();
-        var cr = $container[0].getBoundingClientRect();
-        iconDragging = false;
-        $iconDragged = $icon;
-        iconDragStartX = e.clientX;
-        iconDragStartY = e.clientY;
-        iconStartLeft = r.left - cr.left;
-        iconStartTop = r.top - cr.top;
-      });
-      $(document).on('mousemove', function (e) {
-        if (!$iconDragged || !$iconDragged.length) return;
-        var dx = e.clientX - iconDragStartX, dy = e.clientY - iconDragStartY;
-        if (!iconDragging && (dx*dx + dy*dy > 36)) { iconDragging = true; }
-        if (iconDragging) {
-          var cr = $container[0].getBoundingClientRect();
-          var newLeft = iconStartLeft + e.clientX - iconDragStartX;
-          var newTop = iconStartTop + e.clientY - iconDragStartY;
-          newLeft = Math.max(0, Math.min(cr.width - 80, newLeft));
-          newTop = Math.max(0, Math.min(cr.height - 60, newTop));
-          $iconDragged.css({ left: newLeft + 'px', top: newTop + 'px' });
-        }
-      });
-      $(document).on('mouseup', function (e) {
-        if (e.which !== 1) return;
-        if (iconDragging && $iconDragged && $iconDragged.length) {
-          var id = $iconDragged.data('icon-id');
-          var left = parseInt($iconDragged.css('left'), 10), top = parseInt($iconDragged.css('top'), 10);
-          iconPositions[id] = [left, top];
-          try { localStorage.setItem('desktop-icon-positions', JSON.stringify(iconPositions)); } catch (err) {}
-          justDraggedIcon = true;
-          setTimeout(function () { justDraggedIcon = false; }, 150);
-        }
-        $iconDragged = null;
-        iconDragging = false;
-      });
-
-      // --- Desktop icons: single click = select (ignore if just dragged); theme icon also gets highlighted ---
-      $('.desktop-icon').on('click', function (e) {
-        e.preventDefault();
-        if (justDraggedIcon) return;
-        var $icon = $(this);
-        $('.desktop-icon').removeClass('bg-white/25 rounded-sm');
-        $icon.addClass('bg-white/25 rounded-sm');
-      });
-
-      $('.desktop-icon').on('dblclick', function (e) {
-        e.preventDefault();
-        if (justDraggedIcon || $(this).hasClass('mode-icon')) return;
-        $(this).removeClass('bg-white/25 rounded-sm');
-        var win = $(this).data('window');
-        if (win === 'github') { window.open(GITHUB_URL, '_blank'); return; }
-        if (win === 'resume') { openWindow('resume'); return; }
-        if (win === 'linkedin') { window.open(LINKEDIN_URL, '_blank'); return; }
-        if (win === 'edge') { browser(null, 'Edge'); return; }
-        if (PROJECTS[win]) {
-          openWindow(win);
-          browser(PROJECTS[win].url, PROJECTS[win].title);
-          setTimeout(function () {
-            var $notepad = $area.find('[data-window-id="' + win + '"]');
-            var $browser = $area.find('.desktop-window').filter(function () { var id = $(this).attr('data-window-id'); return id && id.indexOf('browser-') === 0; }).last();
-            if ($notepad.length && $browser.length) {
-              var taskbarH = 56;
-              var pageW = window.innerWidth;
-              var pageH = window.innerHeight - taskbarH;
-              var notepadLeft = pageW * 0.01;
-              var notepadTop = pageH * 0.01;
-              var notepadW = pageW * 0.32;
-              var notepadH = pageH * 0.4;
-              var browserW = pageW * 0.64;
-              var browserH = pageH * 0.64;
-              var browserLeft = pageW - pageW * 0.01 - browserW;
-              var browserTop = pageH - pageH * 0.05 - browserH;
-              function setImportant(el, styles) {
-                var s = el.style;
-                for (var k in styles) {
-                  var cssKey = k.replace(/([A-Z])/g, '-$1').toLowerCase();
-                  s.setProperty(cssKey, styles[k], 'important');
-                }
-              }
-              var np = $notepad[0], br = $browser[0];
-              setImportant(np, { left: notepadLeft + 'px', top: notepadTop + 'px', width: notepadW + 'px', minHeight: notepadH + 'px', height: notepadH + 'px', maxWidth: 'none', maxHeight: 'none' });
-              setImportant(br, { left: browserLeft + 'px', top: browserTop + 'px', right: 'auto', bottom: 'auto', width: browserW + 'px', minHeight: browserH + 'px', height: browserH + 'px', maxWidth: 'none', maxHeight: 'none' });
-            }
-          }, 0);
-          return;
-        }
-        openWindow(win);
-      });
-
-      // Click on desktop (empty area) to deselect icons
-      $('#desktop-icons').on('click', function (e) {
-        if ($(e.target).closest('.desktop-icon').length === 0) {
-          $('.desktop-icon').removeClass('bg-white/25 rounded-sm');
-        }
-      });
-
-      // --- Open window: show or create and bring to front ---
-      function openWindow(id) {
-        var $win = $area.find('[data-window-id="' + id + '"]');
-        if ($win.length) {
-          $win.removeClass('hidden');
-          if (id === 'about' && aboutClosedOnce) {
-            var x = windowOffset.x + (($area.find('.desktop-window').length % 4) * 30);
-            var y = windowOffset.y + (($area.find('.desktop-window').length % 4) * 28);
-            $win.css({ left: x + 'px', top: y + 'px', bottom: '', right: '' });
-          }
-          bringToFront($win);
-          if (id === 'welcome') initCmdInput($win);
-          if ($win.find('.notepad-editor').length) {
-            setTimeout(function () { var el = $win.find('.notepad-editor')[0]; if (el) el.focus(); }, 50);
-          }
-          if (id === 'settings') setTimeout(function () { $win.find('.settings-search').focus(); }, 100);
-          return;
-        }
-        var $tmpl = NOTEPAD_IDS.indexOf(id) >= 0 ? $('#window-notepad') : $('#window-' + id);
-        if (!$tmpl.length) return;
-        var $new = $($tmpl.html());
-        if (NOTEPAD_IDS.indexOf(id) >= 0 && NOTEPAD_CONTENT[id]) {
-          $new.attr('data-window-id', id);
-          $new.find('.notepad-tab-label').text(NOTEPAD_CONTENT[id].tabLabel);
-          $new.find('.notepad-editor').html(NOTEPAD_CONTENT[id].bodyHtml);
-        }
-        var isWelcome = (id === 'welcome');
-        var isMobile = window.innerWidth < 768;
-        if (isWelcome) {
-          var w = isMobile ? Math.min(360, window.innerWidth - 24) : 760;
-          var h = isMobile ? Math.min(420, window.innerHeight - 120) : 460;
-          $new.css({ left: '50%', top: '50%', marginLeft: (-w/2) + 'px', marginTop: (-h/2) + 'px', width: w + 'px', minHeight: h + 'px', zIndex: zIndex++ });
-        } else {
-          var x = windowOffset.x + (($area.find('.desktop-window').length % 4) * 30);
-          var y = windowOffset.y + (($area.find('.desktop-window').length % 4) * 28);
-          $new.css({ left: x + 'px', top: y + 'px', zIndex: zIndex++ });
-        }
-        $area.append($new);
-        openWindows[id] = $new;
-        if (PROJECTS[id]) {
-          $new.find('.project-open-link').on('click', function (e) { e.preventDefault(); var u = $(this).attr('href'); if (u && u !== '#') window.open(u, '_blank'); });
-        }
-        makeDraggable($new);
-        if ($new.find('.window-resize-e').length) makeResizable($new);
-        bindWindowButtons($new);
-        $new.on('mousedown', function () { bringToFront($(this)); });
-        if (window.innerWidth < 768) {
-          $new.data('prevBounds', { left: $new.css('left'), top: $new.css('top'), width: $new.css('width'), minHeight: $new.css('minHeight'), marginLeft: $new.css('marginLeft'), marginTop: $new.css('marginTop') });
-          $new.removeClass('rounded-t-lg').addClass('maximized rounded-none');
-          $new[0].style.position = 'fixed';
-          $new.css({ left: '0', top: '0', right: '0', bottom: TASKBAR_H + 'px', width: '100%', height: '', minHeight: '', marginLeft: '0', marginTop: '0' });
-          $new.find('.window-titlebar').css('cursor', 'default');
-          $new.find('.window-resize-e, .window-resize-s, .window-resize-se').css('pointer-events', 'none');
-        }
-        if (id === 'welcome') initCmdInput($new);
-        if (id === 'settings') initSettings($new);
-        if (id === 'calculator') initCalculator($new);
-        if (id === 'paint') initPaint($new);
-        if ($new.find('.notepad-editor').length) initNotepad($new);
-        if ($new.find('.window-menubar .menu-item').length) bindMenuItems($new);
-      }
-
-      function initSettings($win) {
-        var $tiles = $win.find('.settings-wallpaper-tiles');
-        $tiles.empty();
-        WALLPAPER_OPTIONS.forEach(function (filename) {
-          var path = 'images/' + filename;
-          var $tile = $('<div class="settings-wallpaper-tile rounded border-2 border-slate-300 overflow-hidden cursor-pointer hover:border-blue-500 bg-slate-200 aspect-video flex-shrink-0" data-wallpaper="' + path + '" title="' + filename + '"></div>');
-          $tile.css('background-image', 'url(' + path + ')').css('background-size', 'cover').css('background-position', 'center');
-          $tile.on('click', function () {
-            var p = $(this).data('wallpaper');
-            $('#desktop-wallpaper, #login-wallpaper').css('background-image', "url('" + p + "')");
-            try { localStorage.setItem('portfolio-wallpaper', p); } catch (err) {}
-            $win.find('.settings-wallpaper-tile').removeClass('border-blue-500').css('border-color', '');
-            $(this).addClass('border-blue-500').css('border-color', 'rgb(59 130 246)');
-          });
-          $tiles.append($tile);
-        });
-        $win.find('.settings-nav-item').on('click', function () {
-          $win.find('.settings-nav-item').removeClass('text-slate-800 settings-nav-active').addClass('text-slate-600');
-          $(this).removeClass('text-slate-600').addClass('text-slate-800 settings-nav-active');
-          var page = $(this).data('settings-page');
-          if (page === 'home') {
-            $win.find('.settings-page').addClass('hidden');
-            $win.find('.settings-page[data-page="home"]').removeClass('hidden');
-          }
-        });
-        var $homePreview = $win.find('#settings-home-wallpaper-preview');
-        if ($homePreview.length) {
-          var previewUrl = $('#desktop-wallpaper').css('background-image');
-          if (previewUrl && previewUrl !== 'none') $homePreview.css('background-image', previewUrl);
-        }
-        setTimeout(function () { $win.find('.settings-search').focus(); }, 100);
-      }
-
-      function initCalculator($win) {
-        var $display = $win.find('[data-display]');
-        function setDisplay(s) { $display.text(s || '0'); }
-        var current = '0', prev = null, op = null;
-        $win.find('.calc-btn').on('click', function () {
-          var v = $(this).data('calc');
-          if (v === 'C' || v === 'CE') { current = '0'; prev = null; op = null; setDisplay('0'); return; }
-          if (v === 'back') {
-            if (current.length <= 1) current = '0'; else current = current.slice(0, -1);
-            setDisplay(current);
-            return;
-          }
-          if (v === '=') {
-            if (prev !== null && op) {
-              var a = parseFloat(prev), b = parseFloat(current);
-              if (op === '+') current = (a + b).toString();
-              else if (op === '-') current = (a - b).toString();
-              else if (op === '*') current = (a * b).toString();
-              else if (op === '/') current = b !== 0 ? (a / b).toString() : 'Error';
-              prev = null; op = null;
-              setDisplay(current);
-            }
-            return;
-          }
-          if (v === '%') { var n = parseFloat(current); current = (n / 100).toString(); setDisplay(current); return; }
-          if (v === '1/x') { var x = parseFloat(current); current = x !== 0 ? (1 / x).toString() : 'Error'; setDisplay(current); return; }
-          if (v === 'x2') { var y = parseFloat(current); current = (y * y).toString(); setDisplay(current); return; }
-          if (v === 'sqrt') { var z = parseFloat(current); current = z >= 0 ? Math.sqrt(z).toString() : 'Error'; setDisplay(current); return; }
-          if (v === 'neg') { if (current !== '0') current = current.startsWith('-') ? current.slice(1) : '-' + current; setDisplay(current); return; }
-          if (v === '+' || v === '-' || v === '*' || v === '/') { prev = current; op = v; current = '0'; setDisplay(current); return; }
-          if (v === '.') { if (current.indexOf('.') === -1) current += '.'; setDisplay(current); return; }
-          if (current === '0' && v !== '0') current = v; else if (current !== '0' || v !== '0') current += v;
-          setDisplay(current);
-        });
-      }
-
-      function initPaint($win) {
-        var canvas = $win.find('.paint-canvas')[0];
-        if (!canvas) return;
-        var ctx = canvas.getContext('2d');
-        var drawing = false, lastX, lastY;
-        var color = '#000000';
-        $win.find('.paint-color').on('input', function () { color = $(this).val(); });
-        $win.find('.paint-clear').on('click', function () { ctx.clearRect(0, 0, canvas.width, canvas.height); });
-        function draw(x, y) { ctx.strokeStyle = color; ctx.lineWidth = 2; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(lastX, lastY); ctx.lineTo(x, y); ctx.stroke(); lastX = x; lastY = y; }
-        $win.find('.paint-canvas').on('mousedown', function (e) {
-          drawing = true;
-          var r = canvas.getBoundingClientRect();
-          var s = canvas.width / r.width;
-          lastX = (e.clientX - r.left) * s; lastY = (e.clientY - r.top) * s;
-          $(document).on('mousemove.paint', function (e2) {
-            if (!drawing || !canvas) return;
-            var r2 = canvas.getBoundingClientRect();
-            var s2 = canvas.width / r2.width;
-            var x = (e2.clientX - r2.left) * s2, y = (e2.clientY - r2.top) * s2;
-            draw(x, y);
-          });
-          $(document).on('mouseup.paint', function () { drawing = false; $(document).off('mousemove.paint mouseup.paint'); });
-        });
-      }
-
-      function initCmdInput($win) {
-        var $body = $win.find('.window-body');
-        var $output = $win.find('.cmd-output');
-        var $input = $win.find('.cmd-input');
-        function getInputLine() { return $win.find('.cmd-input-line').last(); }
-        function getTyped() { return $win.find('.cmd-typed').last(); }
-        $input.off('keydown input').on('keydown', function (e) {
-          if (e.key === 'Enter') {
-            e.preventDefault();
-            var $inputLine = getInputLine();
-            var $typed = $inputLine.find('.cmd-typed');
-            var rawLine = ($typed.text() || '').trim();
-            var line = rawLine.toLowerCase();
-            var promptHtml = '<span class="text-slate-300">C:\\Users\\Portfolio&gt;</span> ';
-            $inputLine.replaceWith(escapeHtml(rawLine || '') + '<br>');
-            if (line === 'help') {
-              $output.append('<span class="text-white">fullscreen - Put the page in fullscreen</span><br>');
-              $output.append('<span class="text-white">help - Show this list of commands</span><br>');
-              $output.append('<span class="text-white">settings - Open Settings</span><br>');
-              $output.append('<span class="text-white">calculator - Open Calculator</span><br>');
-              $output.append('<span class="text-white">paint - Open Paint</span><br>');
-              $output.append('<span class="text-white">edge - Open browser (project links only)</span><br>');
-            } else if (line === 'fullscreen') {
-              var doc = document.documentElement;
-              if (!document.fullscreenElement) doc.requestFullscreen().catch(function() {});
-              else if (document.exitFullscreen) document.exitFullscreen();
-            } else if (line === 'settings' || line === 'calculator' || line === 'paint') {
-              openWindow(line);
-            } else if (line === 'edge') {
-              browser(null, 'Edge');
-            }
-            $output.append(promptHtml + '<span class="cmd-input-line inline-flex items-baseline"><span class="cmd-typed"></span><span class="cmd-cursor inline-block w-px h-4 ml-0.5 align-middle bg-white" style="animation: blink 1s step-end infinite;"></span></span>');
-            $body.scrollTop($body[0].scrollHeight);
-            return;
-          }
-          if (e.key === 'Backspace') {
-            e.preventDefault();
-            var $t = getTyped();
-            $t.text($t.text().slice(0, -1));
-            return;
-          }
-        }).on('input', function () {
-          var v = $input.val();
-          $input.val('');
-          var $t = getTyped();
-          $t.text($t.text() + v);
-        });
-        $body.on('click', function () { $input[0].focus(); });
-        setTimeout(function () { $input[0].focus(); }, 100);
-      }
-      function escapeHtml(s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
-
-      function bindMenuItems($win) {
-        $win.find('.window-menubar .menu-item').on('click', function (e) {
-          e.stopPropagation();
-          var $btn = $(this);
-          var label = $btn.text().trim();
-          var $drop = $win.find('.menu-dropdown');
-          if ($drop.length) $drop.remove();
-          var items = { File: ['New', 'Open', 'Save', 'Exit'], Edit: ['Undo', 'Cut', 'Copy', 'Paste'], Format: ['Font', 'Word Wrap'], View: ['Zoom', 'Status Bar'], Help: ['View Help', 'About'] };
-          var list = items[label] || ['(empty)'];
-          var $ul = $('<ul class="menu-dropdown bg-white border border-slate-300 rounded shadow-lg py-1 min-w-[120px] absolute z-[100]"></ul>');
-          list.forEach(function (item) { $ul.append('<li class="px-3 py-1.5 hover:bg-slate-100 cursor-pointer text-sm text-slate-700">' + item + '</li>'); });
-          $win.append($ul);
-          var top = $btn.offset().top - $win.offset().top + 24;
-          var left = $btn.offset().left - $win.offset().left;
-          $ul.css({ top: top + 'px', left: left + 'px' });
-          $(document).one('click', function () { $ul.remove(); });
-        });
-      }
-
-      function bringToFront($win) {
-        $win.css('zIndex', zIndex++);
-      }
-
-      function makeDraggable($win) {
-        var $bar = $win.find('.window-titlebar');
-        var dragging = false, ox, oy, startLeft, startTop;
-        function getCoords(e) {
-          if (e.touches && e.touches.length) return { x: e.touches[0].clientX, y: e.touches[0].clientY };
-          return { x: e.clientX, y: e.clientY };
-        }
-        function startDrag(e) {
-          if ($(e.target).closest('button').length) return;
-          if ($win.hasClass('maximized')) return;
-          e.preventDefault();
-          var c = getCoords(e);
-          dragging = true;
-          ox = c.x;
-          oy = c.y;
-          var r = $win[0].getBoundingClientRect();
-          var areaRect = $area[0].getBoundingClientRect();
-          startLeft = r.left - areaRect.left;
-          startTop = r.top - areaRect.top;
-          bringToFront($win);
-          $win[0].style.transition = 'none';
-        }
-        function moveDrag(e) {
-          if (!dragging) return;
-          var c = getCoords(e);
-          var dx = c.x - ox, dy = c.y - oy;
-          $win.css({ left: (startLeft + dx) + 'px', top: (startTop + dy) + 'px', right: '', bottom: '', marginLeft: '', marginTop: '' });
-        }
-        function endDrag() {
-          dragging = false;
-          $win[0].style.transition = '';
-        }
-        $bar.on('mousedown', startDrag);
-        $bar.on('touchstart', startDrag, { passive: false });
-        $(document).on('mousemove', function (e) {
-          if (!dragging) return;
-          var dx = e.clientX - ox, dy = e.clientY - oy;
-          $win.css({ left: (startLeft + dx) + 'px', top: (startTop + dy) + 'px', right: '', bottom: '', marginLeft: '', marginTop: '' });
-        });
-        $(document).on('touchmove', function (e) {
-          if (!dragging) return;
-          e.preventDefault();
-          var c = getCoords(e);
-          var dx = c.x - ox, dy = c.y - oy;
-          $win.css({ left: (startLeft + dx) + 'px', top: (startTop + dy) + 'px', right: '', bottom: '', marginLeft: '', marginTop: '' });
-        }, { passive: false });
-        $(document).on('mouseup', endDrag);
-        $(document).on('touchend', endDrag);
-      }
-
-      function makeResizable($win) {
-        function doResize(edge, e) {
-          e.preventDefault();
-          var el = $win[0];
-          el.style.transition = 'none';
-          el.style.maxWidth = 'none';
-          var r = el.getBoundingClientRect();
-          var startX = e.clientX, startY = e.clientY;
-          var startW = r.width, startH = r.height;
-          var cursor = (edge === 'se') ? 'nwse-resize' : (edge === 'e') ? 'ew-resize' : 'ns-resize';
-          document.body.style.cursor = cursor;
-          document.body.style.userSelect = 'none';
-          function onMove(e2) {
-            e2.preventDefault();
-            if (edge === 'e' || edge === 'se') {
-              var newW = Math.max(320, startW + (e2.clientX - startX));
-              el.style.width = newW + 'px';
-            }
-            if (edge === 's' || edge === 'se') {
-              var newH = Math.max(200, startH + (e2.clientY - startY));
-              el.style.minHeight = newH + 'px';
-              el.style.height = newH + 'px';
-            }
-          }
-          function onUp() {
-            $(document).off('mousemove.resize mouseup.resize');
-            document.body.style.cursor = '';
-            document.body.style.userSelect = '';
-            el.style.transition = '';
-          }
-          $(document).on('mousemove.resize', onMove);
-          $(document).on('mouseup.resize', onUp);
-        }
-        $win.find('.window-resize-e').on('mousedown', function (e) { if (!$win.hasClass('maximized')) doResize('e', e); });
-        $win.find('.window-resize-s').on('mousedown', function (e) { if (!$win.hasClass('maximized')) doResize('s', e); });
-        $win.find('.window-resize-se').on('mousedown', function (e) { if (!$win.hasClass('maximized')) doResize('se', e); });
-      }
-
-      function bindWindowButtons($win) {
-        $win.find('.window-close').on('click', function () {
-          if ($win.attr('data-window-id') === 'about') aboutClosedOnce = true;
-          var $editor = $win.find('.notepad-editor');
-          if ($editor.length && $win.data('notepad-default') != null) {
-            $editor.html($win.data('notepad-default'));
-            var id = $win.attr('data-window-id');
-            if (PROJECTS[id]) {
-              $win.find('.project-open-link').off('click').on('click', function (e) { e.preventDefault(); var u = $(this).attr('href'); if (u && u !== '#') window.open(u, '_blank'); });
-            }
-          }
-          $win.addClass('hidden');
-        });
-        $win.find('.window-minimize').on('click', function () {
-          $win.css('transition', 'opacity 0.15s ease, transform 0.15s ease');
-          $win.css({ opacity: '0', transform: 'scale(0.95)' });
-          setTimeout(function () {
-            $win.addClass('hidden').css({ opacity: '', transform: '', transition: '' });
-          }, 150);
-        });
-        $win.find('.window-maximize').on('click', function () {
-          if ($win.hasClass('maximized')) {
-            $win.removeClass('maximized rounded-none').addClass('rounded-t-lg');
-            var prev = $win.data('prevBounds');
-            if (prev) {
-              $win[0].style.position = 'absolute';
-              $win.css({ left: prev.left, top: prev.top, right: '', bottom: '', width: prev.width || '', height: '', minHeight: prev.minHeight || '', marginLeft: prev.marginLeft || '', marginTop: prev.marginTop || '' });
-            }
-            $win.find('.window-titlebar').css('cursor', 'move');
-            $win.find('.window-resize-e, .window-resize-s, .window-resize-se').css('pointer-events', '');
-          } else {
-            $win.data('prevBounds', {
-              left: $win.css('left'),
-              top: $win.css('top'),
-              width: $win.css('width'),
-              minHeight: $win.css('minHeight'),
-              marginLeft: $win.css('marginLeft'),
-              marginTop: $win.css('marginTop')
-            });
-            $win.removeClass('rounded-t-lg').addClass('maximized rounded-none');
-            $win[0].style.position = 'fixed';
-            $win.css({
-              left: '0',
-              top: '0',
-              right: '0',
-              bottom: TASKBAR_H + 'px',
-              width: '100%',
-              height: '',
-              minHeight: '',
-              marginLeft: '0',
-              marginTop: '0'
-            });
-            $win.find('.window-titlebar').css('cursor', 'default');
-            $win.find('.window-resize-e, .window-resize-s, .window-resize-se').css('pointer-events', 'none');
-          }
-        });
-      }
-
-      // Taskbar: single click opens / focuses window (GitHub/Resume/LinkedIn open in new tab)
-      $('.taskbar-app').on('click', function () {
-        var id = $(this).data('window');
-        if (id === 'github') { window.open(GITHUB_URL, '_blank'); return; }
-        if (id === 'resume') { openWindow(id); return; }
-        if (id === 'linkedin') { window.open(LINKEDIN_URL, '_blank'); return; }
-        openWindow(id);
-        var $win = $area.find('[data-window-id="' + id + '"]').last();
-        if ($win.length && $win.hasClass('hidden')) $win.removeClass('hidden');
-        if ($win.length) bringToFront($win);
-      });
-
-      // Start menu: show on click of Windows button; hide on outside click
-      $('#start-btn').on('click', function (e) {
-        e.stopPropagation();
-        $('#start-menu').toggleClass('start-menu-closed');
-      });
-      $('#start-menu').on('click', function (e) { e.stopPropagation(); });
-      $(document).on('click', function () { $('#start-menu').addClass('start-menu-closed'); $('#calendar-popover').addClass('hidden'); });
-      $('.start-menu-item').on('click', function () {
-        var id = $(this).data('window');
-        if (id === 'github') { window.open(GITHUB_URL, '_blank'); $('#start-menu').addClass('start-menu-closed'); return; }
-        if (id === 'resume') { openWindow(id); $('#start-menu').addClass('start-menu-closed'); return; }
-        if (id === 'linkedin') { window.open(LINKEDIN_URL, '_blank'); $('#start-menu').addClass('start-menu-closed'); return; }
-        if (id === 'edge') { browser(null, 'Edge'); $('#start-menu').addClass('start-menu-closed'); return; }
-        openWindow(id);
-        $('#start-menu').addClass('start-menu-closed');
-      });
-
-      // System tray: volume tooltip only; wifi/battery have no tooltips
-      $('#tray-volume').on('click', function (e) {
-        e.stopPropagation();
-        var $pop = $('#volume-popover');
-        $pop.toggleClass('hidden');
-        if (!$pop.hasClass('hidden') && bgMusic) {
-          var pct = Math.round((bgMusic.volume || 0.7) * 100);
-          $('#volume-slider').val(pct);
-          $('#volume-pct').text(pct + '%');
-        }
-      });
-      $(document).on('click', function () { $('#volume-popover').addClass('hidden'); });
-      $('#volume-popover').on('click', function (e) { e.stopPropagation(); });
-      $('#volume-slider').on('input', function () {
-        var v = parseInt($(this).val(), 10) / 100;
-        if (bgMusic) bgMusic.volume = v;
-        $('#volume-pct').text(Math.round(v * 100) + '%');
-      });
-
-      // Calendar popover: Windows-style; above taskbar; red highlight; no time at bottom
-      function fillCalendarPopover() {
-        var now = new Date();
-        var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-        $('#calendar-month').text(months[now.getMonth()] + ' ' + now.getFullYear());
-        var first = new Date(now.getFullYear(), now.getMonth(), 1);
-        var last = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-        var startDay = first.getDay();
-        var days = last.getDate();
-        var html = '<span class="font-medium text-slate-400">Su</span><span class="font-medium text-slate-400">Mo</span><span class="font-medium text-slate-400">Tu</span><span class="font-medium text-slate-400">We</span><span class="font-medium text-slate-400">Th</span><span class="font-medium text-slate-400">Fr</span><span class="font-medium text-slate-400">Sa</span>';
-        for (var i = 0; i < startDay; i++) html += '<span></span>';
-        for (var d = 1; d <= days; d++) {
-          var cls = d === now.getDate() ? 'calendar-day-today w-8 h-8 flex items-center justify-center mx-auto' : 'w-8 h-8 flex items-center justify-center mx-auto';
-          html += '<span class="' + cls + '">' + d + '</span>';
-        }
-        $('#calendar-grid').html(html);
-      }
-      $('#tray-time').on('click', function (e) {
-        e.stopPropagation();
-        var $cal = $('#calendar-popover');
-        if ($cal.hasClass('hidden')) { fillCalendarPopover(); $cal.removeClass('hidden'); } else { $cal.addClass('hidden'); }
-      });
-      $('#calendar-popover').on('click', function (e) { e.stopPropagation(); });
-
-      // --- Clock (top, 09:36 AM) & date (bottom, 3/3/2026) - same size, right aligned ---
-      function updateClock() {
-        var now = new Date();
-        var h = now.getHours(), m = now.getMinutes();
-        var ampm = h >= 12 ? 'PM' : 'AM';
-        h = h % 12 || 12;
-        $('#clock').text((h < 10 ? '0' : '') + h + ':' + (m < 10 ? '0' : '') + m + ' ' + ampm);
-        $('#date').text((now.getMonth() + 1) + '/' + now.getDate() + '/' + now.getFullYear());
-      }
-      updateClock();
-      setInterval(updateClock, 1000);
-    });
-  </script>
+  <script src="js/config.js"></script>
+  <script src="js/main.js"></script>
 </body>
 </html>
