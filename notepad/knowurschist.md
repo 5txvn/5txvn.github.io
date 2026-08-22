@@ -11,4 +11,4 @@
 
 **Tech Stack**: HTML, jQuery, Tailwind CSS, GitHub Pages
 
-[Open project in a new tab](https://5txvn.github.io/knowurschist)
+[Open project in a new tab](https://5txvn.github.io/knowurschist/biology)
