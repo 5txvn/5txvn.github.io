@@ -6,9 +6,9 @@ $(function() {
     const bgDark = ['images/bg-dark-1.png', 'images/bg-dark-2.png'];
     const wallpaperOptions = ['bg.png', 'bg-test.png', 'wallpaper.png', 'wallpaper-alt.jpg'];
     const defaultIconPos = {
-        about: [24, 24], contact: [124, 24], resume: [224, 24], github: [324, 24], linkedin: [424, 24],
-        spellingtree: [24, 140], slink: [124, 140], dxdy: [224, 140], carrytheone: [324, 140], knowurschist: [424, 140],
-        settings: [24, 256], edge: [124, 256], theme: [224, 256]
+        about: [16, 20], contact: [140, 20], resume: [264, 20], github: [388, 20], linkedin: [512, 20],
+        spellingtree: [16, 148], slink: [140, 148], dxdy: [264, 148], carrytheone: [388, 148], knowurschist: [512, 148],
+        settings: [16, 276], edge: [140, 276], theme: [264, 276]
     };
 
     let zIndex = 100;
@@ -111,7 +111,9 @@ $(function() {
     };
 
     const savedTheme = localStorage.getItem('portfolio-theme');
-    if(savedTheme === 'dark') $('body').addClass('dark-mode');
+    if(savedTheme === 'dark') {
+        $('body').addClass('dark-mode');
+    }
     else if(!savedTheme) try { localStorage.setItem('portfolio-theme', 'light'); } catch(e) {}
     updateThemeBtn();
     if(!$('#desktop').hasClass('hidden') && !isMobile()) startBg();
@@ -148,7 +150,7 @@ $(function() {
     };
 
     const dismissMobileWarning = () => {
-        $('#mobile-warning').addClass('hidden').removeClass('flex');
+        $('#mobile-warning').addClass('hidden dismissed').removeClass('flex');
         startMusic();
         enterDesktop();
     };
@@ -176,19 +178,54 @@ $(function() {
 
     //desktop icons
     let iconPositions = {};
+    let mobileIconPositions = {};
     try { iconPositions = JSON.parse(localStorage.getItem('desktop-icon-positions') || '{}'); } catch(e) {}
+    try {
+        if(localStorage.getItem('mobile-icons-v2') !== '1') {
+            localStorage.removeItem('mobile-icon-positions');
+            localStorage.setItem('mobile-icons-v2', '1');
+        }
+        mobileIconPositions = JSON.parse(localStorage.getItem('mobile-icon-positions') || '{}');
+    } catch(e) {}
     const $iconBox = $('#desktop-icons-draggable');
+
+    const freezeMobileIcons = () => {
+        if(!isMobile() || $iconBox.hasClass('icons-free')) return;
+        const cr = $iconBox[0].getBoundingClientRect();
+        const snaps = [];
+        $('.draggable-icon').each(function() {
+            const r = this.getBoundingClientRect();
+            snaps.push({ el: this, left: r.left - cr.left, top: r.top - cr.top });
+        });
+        snaps.forEach(s => $(s.el).css({ position: 'absolute', left: s.left + 'px', top: s.top + 'px' }));
+        $iconBox.addClass('icons-free');
+    };
 
     const layoutIcons = () => {
         if(isMobile()) {
-            $('.draggable-icon').css({ position: 'relative', left: 'auto', top: 'auto' });
             if(bgTimer) { clearInterval(bgTimer); bgTimer = null; }
+            const saved = Object.values(mobileIconPositions);
+            const spread = saved.length ? Math.max(...saved.map(p => p[0])) - Math.min(...saved.map(p => p[0])) : 0;
+            if(saved.length >= 3 && spread > 80) {
+                $iconBox.addClass('icons-free');
+                $('.draggable-icon').each(function() {
+                    const id = $(this).data('icon-id');
+                    const pos = mobileIconPositions[id];
+                    if(pos) $(this).css({ position: 'absolute', left: pos[0] + 'px', top: pos[1] + 'px' });
+                });
+            } else {
+                mobileIconPositions = {};
+                try { localStorage.removeItem('mobile-icon-positions'); } catch(e) {}
+                $iconBox.removeClass('icons-free');
+                $('.draggable-icon').css({ position: '', left: '', top: '', width: '' });
+            }
             return;
         }
+        $iconBox.removeClass('icons-free');
         $('.draggable-icon').each(function() {
             const id = $(this).data('icon-id');
-            const pos = iconPositions[id] || defaultIconPos[id] || [24, 24];
-            $(this).css({ position: 'absolute', left: pos[0] + 'px', top: pos[1] + 'px' });
+            const pos = iconPositions[id] || defaultIconPos[id] || [16, 20];
+            $(this).css({ position: 'absolute', left: pos[0] + 'px', top: pos[1] + 'px', width: '' });
         });
         if(!$('#desktop').hasClass('hidden')) startBg();
     };
@@ -198,41 +235,69 @@ $(function() {
     let draggingIcon = false, justDragged = false, $dragIcon = null;
     let iconSx, iconSy, iconSl, iconSt;
 
-    $iconBox.on('mousedown', '.draggable-icon', function(e) {
-        if(isMobile() || e.which !== 1 || $(this).hasClass('mode-icon')) return;
+    const pointer = e => {
+        if(e.touches && e.touches.length) return { x: e.touches[0].clientX, y: e.touches[0].clientY };
+        if(e.changedTouches && e.changedTouches.length) return { x: e.changedTouches[0].clientX, y: e.changedTouches[0].clientY };
+        return { x: e.clientX, y: e.clientY };
+    };
+
+    $iconBox.on('mousedown touchstart', '.draggable-icon', function(e) {
+        if(e.type === 'mousedown' && e.which !== 1) return;
+        if(!isMobile() && $(this).hasClass('mode-icon')) return;
+        const p = pointer(e);
         const r = this.getBoundingClientRect();
         const cr = $iconBox[0].getBoundingClientRect();
         draggingIcon = false;
         $dragIcon = $(this);
-        iconSx = e.clientX;
-        iconSy = e.clientY;
+        iconSx = p.x;
+        iconSy = p.y;
         iconSl = r.left - cr.left;
         iconSt = r.top - cr.top;
     });
 
-    $(document).on('mousemove', e => {
+    $(document).on('mousemove touchmove', e => {
         if(!$dragIcon) return;
-        const dx = e.clientX - iconSx, dy = e.clientY - iconSy;
-        if(!draggingIcon && dx * dx + dy * dy > 36) draggingIcon = true;
+        const p = pointer(e);
+        const dx = p.x - iconSx, dy = p.y - iconSy;
+        if(!draggingIcon && (dx * dx + dy * dy > 36)) {
+            draggingIcon = true;
+            freezeMobileIcons();
+            $dragIcon.css({ position: 'absolute' });
+        }
         if(!draggingIcon) return;
+        if(e.type === 'touchmove') e.preventDefault();
         const cr = $iconBox[0].getBoundingClientRect();
+        const iconW = $dragIcon.outerWidth() || 96;
         $dragIcon.css({
-            left: Math.max(0, Math.min(cr.width - 80, iconSl + e.clientX - iconSx)) + 'px',
-            top: Math.max(0, Math.min(cr.height - 60, iconSt + e.clientY - iconSy)) + 'px'
+            left: Math.max(0, Math.min(cr.width - iconW, iconSl + p.x - iconSx)) + 'px',
+            top: Math.max(0, Math.min(cr.height - 70, iconSt + p.y - iconSy)) + 'px'
         });
     });
 
-    $(document).on('mouseup', e => {
-        if(e.which !== 1) return;
+    $(document).on('mouseup touchend', e => {
+        if(e.type === 'mouseup' && e.which !== 1) return;
         if(draggingIcon && $dragIcon) {
-            iconPositions[$dragIcon.data('icon-id')] = [parseInt($dragIcon.css('left'), 10), parseInt($dragIcon.css('top'), 10)];
-            try { localStorage.setItem('desktop-icon-positions', JSON.stringify(iconPositions)); } catch(err) {}
+            const id = $dragIcon.data('icon-id');
+            const pos = [parseInt($dragIcon.css('left'), 10), parseInt($dragIcon.css('top'), 10)];
+            if(isMobile()) {
+                $('.draggable-icon').each(function() {
+                    mobileIconPositions[$(this).data('icon-id')] = [parseInt($(this).css('left'), 10) || 0, parseInt($(this).css('top'), 10) || 0];
+                });
+                try { localStorage.setItem('mobile-icon-positions', JSON.stringify(mobileIconPositions)); } catch(err) {}
+            } else {
+                iconPositions[id] = pos;
+                try { localStorage.setItem('desktop-icon-positions', JSON.stringify(iconPositions)); } catch(err) {}
+            }
             justDragged = true;
             setTimeout(() => { justDragged = false; }, 150);
         }
         $dragIcon = null;
         draggingIcon = false;
     });
+
+    document.addEventListener('touchmove', e => {
+        if(draggingIcon) e.preventDefault();
+    }, { passive: false });
 
     const openFromIcon = win => {
         if(win === 'github') return window.open(links.github, '_blank');
@@ -321,7 +386,12 @@ $(function() {
         $win.on('mousedown', () => bringToFront($win));
 
         $win.find('.window-close').on('click', () => {
-            if($win.attr('data-window-id') === 'about') aboutClosedOnce = true;
+            if($win.attr('data-window-id') === 'about') {
+                aboutClosedOnce = true;
+                $win.find('.about-hint').remove();
+                const $editor = $win.find('.notepad-editor');
+                if($editor.length) $win.data('notepad-default', $editor.html());
+            }
             const $editor = $win.find('.notepad-editor');
             if($editor.length && $win.data('notepad-default') != null) {
                 $editor.html($win.data('notepad-default'));
@@ -499,7 +569,15 @@ $(function() {
             updateStatus();
         };
         $win.find('.notepad-refresh').on('click', restore);
-        $win.find('.notepad-tab-close').on('click', () => { restore(); $win.addClass('hidden'); });
+        $win.find('.notepad-tab-close').on('click', () => {
+            if($win.attr('data-window-id') === 'about') {
+                aboutClosedOnce = true;
+                $win.find('.about-hint').remove();
+                $win.data('notepad-default', $editor.html());
+            }
+            restore();
+            $win.addClass('hidden');
+        });
     };
 
     const dirHtml = () => {
@@ -561,6 +639,7 @@ $(function() {
         }
         $area.append($new);
         wireWindow($new);
+        if(isMobile()) maximizeWin($new);
 
         $new.find('.browser-btn-refresh').on('click', () => {
             const src = $iframe.attr('src');
@@ -754,7 +833,7 @@ $(function() {
         if(notepadIds.indexOf(id) >= 0) {
             loadNotepad(id)
                 .then(html => {
-                    if(id === 'about') html = '<p class="about-hint"><i class="fa-solid fa-circle-exclamation"></i><span>Close this window to see the rest of the page.</span></p>' + html;
+                    if(id === 'about' && !aboutClosedOnce) html = '<p class="about-hint"><i class="fa-solid fa-circle-exclamation"></i><span>Close this window to see the rest of the page.</span></p>' + html;
                     $new.find('.notepad-editor').html(html);
                     bindProjectLink($new);
                     initNotepad($new);
@@ -844,5 +923,6 @@ $(function() {
         $('#login-screen').addClass('hidden');
         $('#desktop').removeClass('hidden');
         $('#mobile-warning').removeClass('hidden').addClass('flex');
+        layoutIcons();
     }
 });

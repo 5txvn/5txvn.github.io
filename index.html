@@ -67,8 +67,16 @@
     body.dark-mode [data-window-id="settings"] .window-titlebar button.window-maximize,
     body.dark-mode [data-window-id="settings"] .window-titlebar button.window-close { color: #f1f5f9 !important; }
     body.dark-mode [data-window-id="settings"] .window-titlebar button.window-close:hover { background: #dc2626 !important; color: white !important; }
-    body.dark-mode [data-window-id="settings"] .settings-search { color: #fff !important; background: transparent !important; border-color: #475569 !important; }
+    body.dark-mode [data-window-id="settings"] .settings-search { color: #fff !important; background: transparent !important; border: 1px solid #fff !important; }
+    body.dark-mode [data-window-id="settings"] .settings-search:focus { border-color: #93c5fd !important; }
     body.dark-mode [data-window-id="settings"] .settings-search::placeholder { color: #94a3b8 !important; }
+    body.dark-mode [data-window-id="settings"] .settings-nav-item:hover { background: rgba(255,255,255,0.08) !important; }
+    body.dark-mode [data-window-id="settings"] .window-titlebar button:not(.window-close):hover { background: rgba(255,255,255,0.08) !important; }
+    body.dark-mode .desktop-window:not([data-window-id="welcome"]) .window-menubar .menu-item:hover,
+    body.dark-mode .desktop-window:not([data-window-id="welcome"]) .notepad-format-btn:hover,
+    body.dark-mode .desktop-window:not([data-window-id="welcome"]) .notepad-refresh:hover,
+    body.dark-mode .desktop-window:not([data-window-id="welcome"]) .browser-toolbar button:hover { background: rgba(255,255,255,0.08) !important; }
+    body.dark-mode .desktop-window:not([data-window-id="welcome"]) .browser-url-wrap:hover { background: #3d4f66 !important; }
     body.dark-mode [data-window-id="settings"] .window-titlebar .fa-search { color: #94a3b8 !important; }
     body.dark-mode [data-window-id="settings"] .settings-sidebar, body.dark-mode [data-window-id="settings"] .settings-content { background: #1e293b !important; }
     body.dark-mode [data-window-id="settings"] .settings-profile .text-slate-800, body.dark-mode [data-window-id="settings"] .settings-profile .text-slate-600 { color: #e2e8f0 !important; }
@@ -156,15 +164,16 @@
     .window-resize-nw { position: absolute; left: 0; top: 0; width: 10px; height: 10px; cursor: nwse-resize; z-index: 6; }
     .window-resize-ne { position: absolute; right: 0; top: 0; width: 10px; height: 10px; cursor: nesw-resize; z-index: 6; }
     .window-resize-sw { position: absolute; left: 0; bottom: 0; width: 10px; height: 10px; cursor: nesw-resize; z-index: 6; }
-    .about-hint { display: flex; align-items: flex-start; gap: 8px; background: #fff4ce; border: 1px solid #e0c36a; padding: 8px 10px; margin-bottom: 12px; font-weight: 600; }
-    .about-hint i { color: #c2410c; margin-top: 2px; flex-shrink: 0; }
+    .about-hint { display: flex; align-items: center; gap: 8px; background: #fff4ce; border: 1px solid #e0c36a; padding: 8px 10px; margin-bottom: 12px; font-weight: 600; }
+    .about-hint i { color: #c2410c; flex-shrink: 0; }
     body.dark-mode .about-hint { background: #3f3a24; border-color: #8a7a3d; color: #f1f5f9; }
     body.dark-mode .about-hint i { color: #fbbf24; }
     body:not(.dark-mode) #desktop-icons-draggable .desktop-icon {
       background: #fff;
       border-radius: 8px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.18);
+      box-shadow: none;
     }
+    html, body { color-scheme: light; }
     .win-dialog { width: 100%; max-width: 400px; background: #fff; border: 1px solid #8a8a8a; box-shadow: 0 12px 40px rgba(0,0,0,0.45); font-family: "Segoe UI", Segoe, Tahoma, sans-serif; }
     .win-dialog-title { height: 32px; display: flex; align-items: center; justify-content: space-between; padding-left: 12px; font-size: 12px; color: #111; }
     .win-dialog-title button { width: 46px; height: 32px; border: 0; background: transparent; cursor: pointer; font-size: 11px; color: #111; }
@@ -175,42 +184,57 @@
     .win-dialog-foot button { min-width: 88px; padding: 4px 16px; background: #e1e1e1; border: 1px solid #adadad; cursor: pointer; font-size: 13px; }
     .win-dialog-foot button:hover { background: #d4d4d4; }
     @media (max-width: 767px) {
-      #desktop-wallpaper { background-image: none !important; background-color: #000 !important; }
+      #login-screen { display: none !important; }
+      #desktop { display: flex !important; }
+      #mobile-warning { display: flex !important; }
+      #mobile-warning.dismissed { display: none !important; }
+      #desktop-wallpaper { background-image: none !important; background-color: #fff !important; }
       body.dark-mode #desktop-wallpaper { background-color: #000 !important; }
       #wallpaper-fallback { display: none !important; }
       #desktop-icons { padding: 0.75rem !important; }
       #desktop-icons-draggable {
-        display: grid !important;
+        display: grid;
         grid-template-columns: repeat(5, minmax(0, 1fr));
         justify-items: center;
         align-content: start;
-        gap: 1rem 0.2rem;
-        padding: 0.75rem 0.35rem 1rem;
-        position: relative !important;
+        gap: 0.85rem 0.2rem;
+        padding: 0.5rem 0.25rem;
+      }
+      #desktop-icons-draggable.icons-free {
+        display: block;
+      }
+      #desktop-icons-draggable.icons-free .desktop-icon {
+        position: absolute;
       }
       #desktop-icons-draggable .desktop-icon {
-        position: relative !important;
-        left: auto !important;
-        top: auto !important;
-        width: 100%;
-        max-width: 4.6rem;
+        width: 5.5rem;
+        max-width: 5.5rem;
       }
       #desktop-icons-draggable .desktop-icon span {
         color: #111 !important;
         text-shadow: none;
         font-size: 11px;
+        line-height: 1.15;
+        overflow-wrap: anywhere;
       }
       body.dark-mode #desktop-icons-draggable .desktop-icon span { color: #f1f5f9 !important; }
-      body:not(.dark-mode) #desktop-icons-draggable .desktop-icon { background: #fff; }
+      body:not(.dark-mode) #desktop-icons-draggable .desktop-icon { background: #fff; box-shadow: none; }
       .desktop-window:not(.maximized) { max-width: 95vw !important; width: 95vw !important; }
       .desktop-window.maximized { max-width: none !important; width: 100% !important; min-height: 0 !important; }
-      .desktop-icon { touch-action: manipulation; }
+      .desktop-icon { touch-action: none; }
       #start-btn { display: flex !important; }
       #start-menu { left: 8px; right: 8px; width: auto; max-width: none; }
       #start-menu-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); max-height: 50vh; overflow-y: auto; }
       .notepad-editor { font-size: 15px; }
       .resume-iframe { min-height: 0 !important; height: 100% !important; width: 100% !important; }
       .resume-window-body { overflow: auto !important; }
+      [data-window-id="settings"] .window-titlebar .absolute.left-1\/2 { display: none; }
+      [data-window-id="settings"] .flex.flex-1.min-h-0 { flex-direction: column; }
+      .settings-sidebar { width: 100% !important; padding: 8px 10px !important; }
+      .settings-profile { display: none; }
+      .settings-nav-links { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px; }
+      .settings-nav-item { font-size: 11px !important; padding: 8px 4px !important; flex-direction: column; justify-content: center; text-align: center; gap: 4px !important; }
+      .settings-content { padding: 12px !important; }
     }
   </style>
 </head>
@@ -258,63 +282,63 @@
     <!-- Desktop icons: black text; theme toggle to the right of Edge -->
     <div id="desktop-icons" class="flex-1 relative p-6 flex flex-col gap-8">
       <div id="desktop-icons-draggable" class="absolute inset-0 pointer-events-none">
-        <div class="desktop-icon draggable-icon flex flex-col items-center w-20 cursor-pointer group rounded-sm p-1 pointer-events-auto" data-window="about" data-icon-id="about">
+        <div class="desktop-icon draggable-icon flex flex-col items-center w-24 cursor-pointer group rounded-sm p-1 pointer-events-auto" data-window="about" data-icon-id="about">
           <img src="images/icons/fileexplorer.png" alt="About Me" class="icon-custom w-14 h-14 object-contain drop-shadow-lg group-hover:brightness-110 transition" />
-          <span class="text-black text-sm text-center mt-2 drop-shadow-lg font-normal">About Me</span>
+          <span class="text-black text-sm text-center mt-2 drop-shadow-lg font-normal leading-tight break-words">About Me</span>
         </div>
-        <div class="desktop-icon draggable-icon flex flex-col items-center w-20 cursor-pointer group rounded-sm p-1 pointer-events-auto" data-window="contact" data-icon-id="contact">
+        <div class="desktop-icon draggable-icon flex flex-col items-center w-24 cursor-pointer group rounded-sm p-1 pointer-events-auto" data-window="contact" data-icon-id="contact">
           <img src="images/icons/outlook.png" alt="Contact" class="icon-custom w-14 h-14 object-contain drop-shadow-lg group-hover:brightness-110 transition" />
-          <span class="text-black text-sm text-center mt-2 drop-shadow-lg font-normal">Contact</span>
+          <span class="text-black text-sm text-center mt-2 drop-shadow-lg font-normal leading-tight break-words">Contact</span>
         </div>
-        <div class="desktop-icon draggable-icon flex flex-col items-center w-20 cursor-pointer group rounded-sm p-1 pointer-events-auto" data-window="resume" data-icon-id="resume">
+        <div class="desktop-icon draggable-icon flex flex-col items-center w-24 cursor-pointer group rounded-sm p-1 pointer-events-auto" data-window="resume" data-icon-id="resume">
           <img src="images/icons/notepad.png" alt="Resume" class="icon-custom w-14 h-14 object-contain drop-shadow-lg group-hover:brightness-110 transition" />
-          <span class="text-black text-sm text-center mt-2 drop-shadow-lg font-normal">Resume</span>
+          <span class="text-black text-sm text-center mt-2 drop-shadow-lg font-normal leading-tight break-words">Resume</span>
         </div>
-        <div class="desktop-icon draggable-icon flex flex-col items-center w-20 cursor-pointer group rounded-sm p-1 pointer-events-auto" data-window="github" data-icon-id="github">
+        <div class="desktop-icon draggable-icon flex flex-col items-center w-24 cursor-pointer group rounded-sm p-1 pointer-events-auto" data-window="github" data-icon-id="github">
           <img src="images/icons/vscode.png" alt="GitHub" class="icon-custom w-14 h-14 object-contain drop-shadow-lg group-hover:brightness-110 transition" />
-          <span class="text-black text-sm text-center mt-2 drop-shadow-lg font-normal">My Code</span>
+          <span class="text-black text-sm text-center mt-2 drop-shadow-lg font-normal leading-tight break-words">My Code</span>
         </div>
-        <div class="desktop-icon draggable-icon flex flex-col items-center w-20 cursor-pointer group rounded-sm p-1 pointer-events-auto" data-window="linkedin" data-icon-id="linkedin">
+        <div class="desktop-icon draggable-icon flex flex-col items-center w-24 cursor-pointer group rounded-sm p-1 pointer-events-auto" data-window="linkedin" data-icon-id="linkedin">
           <img src="images/icons/linkedin.png" alt="LinkedIn" class="icon-custom w-14 h-14 object-contain drop-shadow-lg group-hover:brightness-110 transition" />
-          <span class="text-black text-sm text-center mt-2 drop-shadow-lg font-normal">LinkedIn</span>
+          <span class="text-black text-sm text-center mt-2 drop-shadow-lg font-normal leading-tight break-words">LinkedIn</span>
         </div>
-        <div class="desktop-icon draggable-icon flex flex-col items-center w-20 cursor-pointer group rounded-sm p-1 pointer-events-auto" data-window="spellingtree" data-icon-id="spellingtree">
+        <div class="desktop-icon draggable-icon flex flex-col items-center w-24 cursor-pointer group rounded-sm p-1 pointer-events-auto" data-window="spellingtree" data-icon-id="spellingtree">
           <img src="images/icons/translate.png" alt="Spelling Tree" class="icon-custom w-14 h-14 object-contain drop-shadow-lg group-hover:brightness-110 transition" />
-          <span class="text-black text-sm text-center mt-2 drop-shadow-lg font-normal">SpellingTree</span>
+          <span class="text-black text-sm text-center mt-2 drop-shadow-lg font-normal leading-tight break-words">SpellingTree</span>
         </div>
-        <div class="desktop-icon draggable-icon flex flex-col items-center w-20 cursor-pointer group rounded-sm p-1 pointer-events-auto" data-window="carrytheone" data-icon-id="carrytheone">
+        <div class="desktop-icon draggable-icon flex flex-col items-center w-24 cursor-pointer group rounded-sm p-1 pointer-events-auto" data-window="carrytheone" data-icon-id="carrytheone">
           <img src="images/icons/one.png" alt="CarryTheOne" class="icon-custom w-14 h-14 object-contain drop-shadow-lg group-hover:brightness-110 transition" />
-          <span class="text-black text-sm text-center mt-2 drop-shadow-lg font-normal">CarryTheOne</span>
+          <span class="text-black text-sm text-center mt-2 drop-shadow-lg font-normal leading-tight break-words">Carry The One</span>
         </div>
-        <div class="desktop-icon draggable-icon flex flex-col items-center w-20 cursor-pointer group rounded-sm p-1 pointer-events-auto" data-window="dxdy" data-icon-id="dxdy">
+        <div class="desktop-icon draggable-icon flex flex-col items-center w-24 cursor-pointer group rounded-sm p-1 pointer-events-auto" data-window="dxdy" data-icon-id="dxdy">
           <img src="images/icons/calculator.png" alt="dxdy" class="icon-custom w-14 h-14 object-contain drop-shadow-lg group-hover:brightness-110 transition" />
-          <span class="text-black text-sm text-center mt-2 drop-shadow-lg font-normal">dxdy</span>
+          <span class="text-black text-sm text-center mt-2 drop-shadow-lg font-normal leading-tight break-words">dxdy</span>
         </div>
-        <div class="desktop-icon draggable-icon flex flex-col items-center w-20 cursor-pointer group rounded-sm p-1 pointer-events-auto" data-window="slink" data-icon-id="slink">
+        <div class="desktop-icon draggable-icon flex flex-col items-center w-24 cursor-pointer group rounded-sm p-1 pointer-events-auto" data-window="slink" data-icon-id="slink">
           <img src="images/icons/slink.png" alt="Slink" class="icon-custom w-14 h-14 object-contain drop-shadow-lg group-hover:brightness-110 transition" />
-          <span class="text-black text-sm text-center mt-2 drop-shadow-lg font-normal">Slink</span>
+          <span class="text-black text-sm text-center mt-2 drop-shadow-lg font-normal leading-tight break-words">Slink</span>
         </div>
-        <div class="desktop-icon draggable-icon flex flex-col items-center w-20 cursor-pointer group rounded-sm p-1 pointer-events-auto" data-window="knowurschist" data-icon-id="knowurschist">
+        <div class="desktop-icon draggable-icon flex flex-col items-center w-24 cursor-pointer group rounded-sm p-1 pointer-events-auto" data-window="knowurschist" data-icon-id="knowurschist">
           <img src="images/icons/petri-dish.png" alt="KnowUrSchist" class="icon-custom w-14 h-14 object-contain drop-shadow-lg group-hover:brightness-110 transition" />
-          <span class="text-black text-sm text-center mt-2 drop-shadow-lg font-normal">KnowUrSchist</span>
+          <span class="text-black text-sm text-center mt-2 drop-shadow-lg font-normal leading-tight break-words">Know Ur Schist</span>
         </div>
-        <div class="desktop-icon draggable-icon flex flex-col items-center w-20 cursor-pointer group rounded-sm p-1 pointer-events-auto" data-window="settings" data-icon-id="settings">
+        <div class="desktop-icon draggable-icon flex flex-col items-center w-24 cursor-pointer group rounded-sm p-1 pointer-events-auto" data-window="settings" data-icon-id="settings">
           <img src="images/icons/settings.png" alt="Settings" class="icon-custom w-14 h-14 object-contain drop-shadow-lg group-hover:brightness-110 transition" />
-          <span class="text-black text-sm text-center mt-2 drop-shadow-lg font-normal">Settings</span>
+          <span class="text-black text-sm text-center mt-2 drop-shadow-lg font-normal leading-tight break-words">Settings</span>
         </div>
         <!--
-        <div class="desktop-icon draggable-icon flex flex-col items-center w-20 cursor-pointer group rounded-sm p-1 pointer-events-auto" data-window="paint" data-icon-id="paint">
+        <div class="desktop-icon draggable-icon flex flex-col items-center w-24 cursor-pointer group rounded-sm p-1 pointer-events-auto" data-window="paint" data-icon-id="paint">
           <img src="images/icons/paint.png" alt="Paint" class="icon-custom icon-paint w-14 h-14 object-contain drop-shadow-lg group-hover:brightness-110 transition" />
-          <span class="text-black text-sm text-center mt-2 drop-shadow-lg font-normal">Paint</span>
+          <span class="text-black text-sm text-center mt-2 drop-shadow-lg font-normal leading-tight break-words">Paint</span>
         </div>
       -->
-        <div class="desktop-icon draggable-icon flex flex-col items-center w-20 cursor-pointer group rounded-sm p-1 pointer-events-auto" data-window="edge" data-icon-id="edge">
+        <div class="desktop-icon draggable-icon flex flex-col items-center w-24 cursor-pointer group rounded-sm p-1 pointer-events-auto" data-window="edge" data-icon-id="edge">
           <img src="images/icons/edge.png" alt="Edge" class="icon-custom w-14 h-14 object-contain drop-shadow-lg group-hover:brightness-110 transition" />
-          <span class="text-black text-sm text-center mt-2 drop-shadow-lg font-normal">Edge</span>
+          <span class="text-black text-sm text-center mt-2 drop-shadow-lg font-normal leading-tight break-words">Edge</span>
         </div>
-        <div id="theme-toggle" class="desktop-icon mode-icon draggable-icon flex flex-col items-center w-20 cursor-pointer group rounded-sm p-1 pointer-events-auto" data-icon-id="theme" title="Double-click to switch theme">
+        <div id="theme-toggle" class="desktop-icon mode-icon draggable-icon flex flex-col items-center w-24 cursor-pointer group rounded-sm p-1 pointer-events-auto" data-icon-id="theme" title="Double-click to switch theme">
           <img id="theme-toggle-img" src="images/icons/moon.png" alt="" class="icon-custom w-14 h-14 object-contain drop-shadow-lg group-hover:brightness-110 transition" />
-          <span id="theme-toggle-label" class="text-black text-sm text-center mt-2 drop-shadow-lg font-normal">Dark mode</span>
+          <span id="theme-toggle-label" class="text-black text-sm text-center mt-2 drop-shadow-lg font-normal leading-tight break-words">Dark mode</span>
         </div>
       </div>
     </div>
@@ -538,7 +562,7 @@
         </div>
         <div class="absolute left-1/2 -translate-x-1/2 w-56 flex items-center">
           <i class="fa-solid fa-search absolute left-2.5 text-slate-400 text-xs pointer-events-none"></i>
-          <input type="text" class="settings-search w-full pl-8 pr-3 py-1.5 text-sm rounded-md border-0 border-b-2 border-slate-200 focus:border-blue-500 focus:outline-none bg-transparent text-slate-800 placeholder-slate-400" placeholder="Find a setting" />
+          <input type="text" class="settings-search w-full pl-8 pr-3 py-1.5 text-sm rounded-md border border-slate-300 focus:border-blue-500 focus:outline-none bg-transparent text-slate-800 placeholder-slate-400" placeholder="Find a setting" />
         </div>
         <div class="flex items-center flex-shrink-0">
           <button type="button" class="window-minimize w-10 h-8 flex items-center justify-center hover:bg-slate-200/80 rounded text-slate-600" style="font-size:13px;line-height:1">&#x2013;</button>
@@ -554,7 +578,7 @@
             </div>
             <div class="min-w-0">
               <p class="font-bold text-slate-800 text-sm truncate">Steven's Portfolio</p>
-              <p class="text-xs text-slate-600 truncate">steven.livingston.mathcomp@gmail.com</p>
+              <p class="text-xs text-slate-600 truncate">stevenlivingston@uchicago.edu</p>
             </div>
           </div>
           <div class="settings-nav-links flex flex-col gap-0.5">

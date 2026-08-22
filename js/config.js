@@ -9,7 +9,7 @@ const projects = {
     carrytheone: { title: 'CarryTheOne', url: 'https://5txvn.github.io/carrytheone', icon: 'one.png' },
     dxdy: { title: 'dxdy', url: 'https://dxdy-m2c7.onrender.com', icon: 'calculator.png' },
     slink: { title: 'Slink', url: 'https://sem-link.org', icon: 'slink.png' },
-    knowurschist: { title: 'KnowUrSchist', url: 'https://5txvn.github.io/knowurschist', icon: 'petri-dish.png' }
+    knowurschist: { title: 'KnowUrSchist', url: 'https://5txvn.github.io/knowurschist/biology', icon: 'petri-dish.png' }
 };
 
 const notepadIds = ['about', 'contact', 'spellingtree', 'carrytheone', 'dxdy', 'slink', 'knowurschist'];
