@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Steven's Portfolio.</title>
+  <title>Steven's Portfolio</title>
   <link rel="icon" href="images/icons/windows11.webp" />
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
@@ -39,18 +39,9 @@
     body.dark-mode #tray-battery #battery-pct { color: #e2e8f0; }
     /* Tray area hover: in dark mode same as Windows button (light highlight) */
     body.dark-mode #tray-wifi:hover, body.dark-mode #tray-volume:hover, body.dark-mode #tray-overflow:hover, body.dark-mode #tray-time:hover { background: rgba(255,255,255,0.15); border-radius: 4px; }
-    body.dark-mode .volume-popover { background: #334155; border-color: #475569; }
-    body.dark-mode #volume-pct { color: #e2e8f0 !important; }
-    .volume-slider-thin { -webkit-appearance: none; appearance: none; height: 4px; background: #e2e8f0; border-radius: 2px; }
-    .volume-slider-thin::-webkit-slider-thumb { -webkit-appearance: none; width: 12px; height: 12px; background: #0f172a; border-radius: 50%; cursor: pointer; }
-    .volume-slider-thin::-moz-range-thumb { width: 12px; height: 12px; background: #0f172a; border-radius: 50%; cursor: pointer; border: 0; }
-    body.dark-mode .volume-slider-thin { background: #475569; }
-    body.dark-mode .volume-slider-thin::-webkit-slider-thumb { background: #f1f5f9; }
-    body.dark-mode .volume-slider-thin::-moz-range-thumb { background: #f1f5f9; }
     /* Calendar popup: right above taskbar (like start menu); blue today dot; dark mode */
     #calendar-popover { font-family: "Segoe UI", Segoe, Tahoma, Geneva, Verdana, sans-serif; }
     #calendar-popover.calendar-popover-windows { bottom: 100% !important; margin-bottom: 18px !important; }
-    #volume-popover.volume-popover { bottom: 100% !important; margin-bottom: 18px !important; left: 50% !important; right: auto !important; transform: translateX(-50%); }
     #calendar-popover .calendar-day-today { background: #2563eb !important; color: white !important; border-radius: 50%; }
     body.dark-mode #calendar-popover { background: #1e293b; border-color: #475569; }
     body.dark-mode #calendar-month { color: #e2e8f0 !important; }
@@ -171,7 +162,19 @@
     body:not(.dark-mode) #desktop-icons-draggable .desktop-icon {
       background: #fff;
       border-radius: 8px;
+      border: 1px solid #000;
       box-shadow: none;
+    }
+    body.dark-mode #desktop-icons-draggable .desktop-icon {
+      background: #000;
+      border-radius: 8px;
+      border: 1px solid #fff;
+      box-shadow: none;
+    }
+    #desktop-wallpaper, #login-wallpaper {
+      background-position: center center;
+      background-size: cover;
+      background-repeat: no-repeat;
     }
     html, body { color-scheme: light; }
     .win-dialog { width: 100%; max-width: 400px; background: #fff; border: 1px solid #8a8a8a; box-shadow: 0 12px 40px rgba(0,0,0,0.45); font-family: "Segoe UI", Segoe, Tahoma, sans-serif; }
@@ -188,8 +191,15 @@
       #desktop { display: flex !important; }
       #mobile-warning { display: flex !important; }
       #mobile-warning.dismissed { display: none !important; }
-      #desktop-wallpaper { background-image: none !important; background-color: #fff !important; }
-      body.dark-mode #desktop-wallpaper { background-color: #000 !important; }
+      #desktop-wallpaper {
+        background-image: url('images/bg-light-cropped.png?v=2') !important;
+        background-position: center center !important;
+        background-size: cover !important;
+        background-repeat: no-repeat !important;
+      }
+      body.dark-mode #desktop-wallpaper {
+        background-image: url('images/bg-dark-cropped.png?v=2') !important;
+      }
       #wallpaper-fallback { display: none !important; }
       #desktop-icons { padding: 0.75rem !important; }
       #desktop-icons-draggable {
@@ -206,9 +216,15 @@
       #desktop-icons-draggable.icons-free .desktop-icon {
         position: absolute;
       }
-      #desktop-icons-draggable .desktop-icon {
+      #desktop-icons-draggable .desktop-icon,
+      body:not(.dark-mode) #desktop-icons-draggable .desktop-icon,
+      body.dark-mode #desktop-icons-draggable .desktop-icon {
         width: 5.5rem;
         max-width: 5.5rem;
+        background: transparent !important;
+        border: none !important;
+        border-radius: 0;
+        box-shadow: none !important;
       }
       #desktop-icons-draggable .desktop-icon span {
         color: #111 !important;
@@ -218,7 +234,6 @@
         overflow-wrap: anywhere;
       }
       body.dark-mode #desktop-icons-draggable .desktop-icon span { color: #f1f5f9 !important; }
-      body:not(.dark-mode) #desktop-icons-draggable .desktop-icon { background: #fff; box-shadow: none; }
       .desktop-window:not(.maximized) { max-width: 95vw !important; width: 95vw !important; }
       .desktop-window.maximized { max-width: none !important; width: 100% !important; min-height: 0 !important; }
       .desktop-icon { touch-action: none; }
@@ -240,9 +255,9 @@
 </head>
 <body class="min-h-screen overflow-hidden bg-slate-900 select-none">
 
-  <!-- Login: lock screen background (bg.png); bottom-right: wifi, accessibility, power -->
+  <!-- Login: lock screen background; bottom-right: wifi, accessibility, power -->
   <div id="login-screen" class="fixed inset-0 z-[100] flex flex-col items-center justify-center">
-    <div id="login-wallpaper" class="absolute inset-0 bg-cover bg-center bg-no-repeat blur-lg" style="background-image: url('images/bg.png');"></div>
+    <div id="login-wallpaper" class="absolute inset-0 bg-cover bg-center bg-no-repeat blur-lg" style="background-image: url('images/bg-dark-1.png');"></div>
     <div class="relative z-10 flex flex-col items-center">
       <div class="w-48 h-48 rounded-full bg-white/40 flex items-center justify-center mb-9">
         <i class="fa-solid fa-user text-white text-8xl"></i>
@@ -362,7 +377,7 @@
       <div class="flex items-center gap-1 text-slate-700 ml-auto">
         <span id="tray-overflow" class="hidden md:flex system-tray-icon relative items-center justify-center w-6 h-6 rounded hover:bg-black/5 cursor-default" title="Show hidden icons"><i class="fa-solid fa-chevron-up text-[10px] text-slate-600"></i></span>
         <span id="tray-wifi" class="hidden md:flex system-tray-icon relative items-center justify-center w-6 h-6 rounded hover:bg-black/5 cursor-default" title="Connected to Steven's Network"><i class="fa-solid fa-wifi text-[12px] text-slate-600"></i></span>
-        <span id="tray-volume" class="hidden md:flex system-tray-icon relative items-center justify-center w-6 h-6 rounded cursor-pointer"><i class="fa-solid fa-volume-high text-[12px] text-slate-600"></i><div id="volume-popover" class="volume-popover hidden absolute w-52 bg-white rounded-lg shadow-xl border border-slate-200 p-4 z-[100]"><div class="flex items-center gap-3"><input type="range" id="volume-slider" min="0" max="100" value="70" class="volume-slider-thin flex-1 h-1 accent-black" /><span id="volume-pct" class="text-sm font-medium text-slate-800 w-10 text-right">70%</span></div></div></span>
+        <span id="tray-volume" class="hidden md:flex system-tray-icon relative items-center justify-center w-6 h-6 rounded hover:bg-black/5 cursor-default" title="Speakers"><i class="fa-solid fa-volume-high text-[12px] text-slate-600"></i></span>
         <div id="tray-time" class="tray-time-cluster relative flex flex-col items-end justify-center pr-3 pl-3 ml-1 text-right cursor-pointer rounded hover:bg-black/5 py-1 pr-2">
           <span id="clock" class="text-[11px] font-medium leading-tight">--:--</span>
           <span id="date" class="text-[11px] font-medium leading-tight">--</span>
@@ -599,7 +614,7 @@
           <div class="settings-page" data-page="home">
             <h2 class="text-lg font-semibold text-slate-800 mb-4">Home</h2>
             <div class="flex flex-col sm:flex-row items-start gap-4">
-              <div class="w-full sm:w-48 h-28 rounded-lg border-4 border-black overflow-hidden flex-shrink-0 bg-cover bg-center" id="settings-home-wallpaper-preview" style="background-image: url('images/bg.png');"></div>
+              <div class="w-full sm:w-48 h-28 rounded-lg border-4 border-black overflow-hidden flex-shrink-0 bg-cover bg-center" id="settings-home-wallpaper-preview" style="background-image: url('images/bg-light-1.png');"></div>
               <div class="flex flex-col sm:flex-row sm:items-center sm:flex-wrap gap-4 flex-1">
                 <div class="flex flex-col gap-2 sm:border-r sm:border-slate-200 sm:pr-4">
                   <p class="font-semibold text-slate-800 text-base">DESKTOP_STEVEN</p>

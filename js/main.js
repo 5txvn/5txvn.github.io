@@ -4,7 +4,9 @@ $(function() {
     const taskbarH = 56;
     const bgLight = ['images/bg-light-1.png', 'images/bg-light-2.png'];
     const bgDark = ['images/bg-dark-1.png', 'images/bg-dark-2.png'];
-    const wallpaperOptions = ['bg.png', 'bg-test.png', 'wallpaper.png', 'wallpaper-alt.jpg'];
+    const bgMobileLight = 'images/bg-light-cropped.png?v=2';
+    const bgMobileDark = 'images/bg-dark-cropped.png?v=2';
+    const wallpaperOptions = ['bg-light-1.png', 'bg-light-2.png', 'bg-dark-1.png', 'bg-dark-2.png'];
     const defaultIconPos = {
         about: [16, 20], contact: [140, 20], resume: [264, 20], github: [388, 20], linkedin: [512, 20],
         spellingtree: [16, 148], slink: [140, 148], dxdy: [264, 148], carrytheone: [388, 148], knowurschist: [512, 148],
@@ -13,45 +15,10 @@ $(function() {
 
     let zIndex = 100;
     let aboutClosedOnce = false;
-    let bgMusic = null;
     let bgLightIndex = 0;
     let bgDarkIndex = 0;
     let bgTimer = null;
     let bgReady = false;
-    let errorPlayed = false;
-
-    const playWinError = () => {
-        if(errorPlayed) return;
-        errorPlayed = true;
-        try {
-            const ctx = new (window.AudioContext || window.webkitAudioContext)();
-            if(ctx.state === 'suspended') ctx.resume();
-            const notes = [392, 311, 247];
-            notes.forEach((freq, i) => {
-                const osc = ctx.createOscillator();
-                const gain = ctx.createGain();
-                osc.type = 'square';
-                osc.frequency.value = freq;
-                const t = ctx.currentTime + i * 0.16;
-                gain.gain.setValueAtTime(0.07, t);
-                gain.gain.exponentialRampToValueAtTime(0.001, t + 0.18);
-                osc.connect(gain);
-                gain.connect(ctx.destination);
-                osc.start(t);
-                osc.stop(t + 0.2);
-            });
-        } catch(e) {}
-    };
-
-    const startMusic = () => {
-        try {
-            bgMusic = new Audio('bg-music.mp3');
-            bgMusic.loop = true;
-            bgMusic.volume = 0.7;
-            bgMusic.play().catch(() => {});
-            $('#volume-slider').val(70);
-        } catch(e) {}
-    };
 
     const bringToFront = $win => $win.css('zIndex', zIndex++);
 
@@ -100,6 +67,17 @@ $(function() {
         }, 50);
     };
 
+    const applyWallpaper = () => {
+        if(isMobile()) {
+            if(bgTimer) { clearInterval(bgTimer); bgTimer = null; }
+            const url = $('body').hasClass('dark-mode') ? bgMobileDark : bgMobileLight;
+            $('#desktop-wallpaper').css('background-image', `url('${url}')`);
+            $('#wallpaper-fallback').addClass('hidden');
+            return;
+        }
+        if(!$('#desktop').hasClass('hidden')) startBg();
+    };
+
     const firstBg = new Image();
     firstBg.onload = () => $('#wallpaper-fallback').addClass('hidden');
     firstBg.src = bgLight[0];
@@ -113,16 +91,17 @@ $(function() {
     const savedTheme = localStorage.getItem('portfolio-theme');
     if(savedTheme === 'dark') {
         $('body').addClass('dark-mode');
+        $('#desktop-wallpaper').css('background-image', `url('${isMobile() ? bgMobileDark : bgDark[0]}')`);
     }
-    else if(!savedTheme) try { localStorage.setItem('portfolio-theme', 'light'); } catch(e) {}
+    if(!savedTheme) try { localStorage.setItem('portfolio-theme', 'light'); } catch(e) {}
     updateThemeBtn();
-    if(!$('#desktop').hasClass('hidden') && !isMobile()) startBg();
+    if(!$('#desktop').hasClass('hidden')) applyWallpaper();
 
     const setTheme = dark => {
         $('body').toggleClass('dark-mode', dark);
         try { localStorage.setItem('portfolio-theme', dark ? 'dark' : 'light'); } catch(e) {}
         updateThemeBtn();
-        if(!$('#desktop').hasClass('hidden') && !isMobile()) startBg();
+        if(!$('#desktop').hasClass('hidden')) applyWallpaper();
     };
 
     //login
@@ -145,22 +124,18 @@ $(function() {
         $('#login-screen').addClass('hidden');
         $('#desktop').removeClass('hidden');
         if(!isMobile() && document.documentElement.requestFullscreen) document.documentElement.requestFullscreen().catch(() => {});
-        startMusic();
         enterDesktop();
     };
 
     const dismissMobileWarning = () => {
         $('#mobile-warning').addClass('hidden dismissed').removeClass('flex');
-        startMusic();
         enterDesktop();
     };
 
     $('.mobile-warning-ok').on('click', e => {
         e.stopPropagation();
-        playWinError();
-        setTimeout(dismissMobileWarning, 450);
+        dismissMobileWarning();
     });
-    $('#mobile-warning').on('pointerdown', playWinError);
 
     $('#login-enter-btn').on('click', dismissLogin);
     $(document).on('keydown', e => {
@@ -203,7 +178,6 @@ $(function() {
 
     const layoutIcons = () => {
         if(isMobile()) {
-            if(bgTimer) { clearInterval(bgTimer); bgTimer = null; }
             const saved = Object.values(mobileIconPositions);
             const spread = saved.length ? Math.max(...saved.map(p => p[0])) - Math.min(...saved.map(p => p[0])) : 0;
             if(saved.length >= 3 && spread > 80) {
@@ -219,6 +193,7 @@ $(function() {
                 $iconBox.removeClass('icons-free');
                 $('.draggable-icon').css({ position: '', left: '', top: '', width: '' });
             }
+            if(!$('#desktop').hasClass('hidden')) applyWallpaper();
             return;
         }
         $iconBox.removeClass('icons-free');
@@ -227,7 +202,7 @@ $(function() {
             const pos = iconPositions[id] || defaultIconPos[id] || [16, 20];
             $(this).css({ position: 'absolute', left: pos[0] + 'px', top: pos[1] + 'px', width: '' });
         });
-        if(!$('#desktop').hasClass('hidden')) startBg();
+        if(!$('#desktop').hasClass('hidden')) applyWallpaper();
     };
     layoutIcons();
     window.matchMedia('(max-width: 767px)').addEventListener('change', layoutIcons);
@@ -866,26 +841,11 @@ $(function() {
         $('#start-menu').addClass('start-menu-closed');
     });
 
-    $('#tray-volume').on('click', e => {
-        e.stopPropagation();
-        const $pop = $('#volume-popover');
-        $pop.toggleClass('hidden');
-        if(!$pop.hasClass('hidden') && bgMusic) {
-            const pct = Math.round((bgMusic.volume || 0.7) * 100);
-            $('#volume-slider').val(pct);
-            $('#volume-pct').text(pct + '%');
-        }
-    });
-    $('#volume-popover, #calendar-popover').on('click', e => e.stopPropagation());
-    $('#volume-slider').on('input', function() {
-        const v = parseInt($(this).val(), 10) / 100;
-        if(bgMusic) bgMusic.volume = v;
-        $('#volume-pct').text(Math.round(v * 100) + '%');
-    });
+    $('#calendar-popover').on('click', e => e.stopPropagation());
 
     $(document).on('click', () => {
         $('#start-menu').addClass('start-menu-closed');
-        $('#calendar-popover, #volume-popover').addClass('hidden');
+        $('#calendar-popover').addClass('hidden');
     });
 
     $('#tray-time').on('click', e => {
