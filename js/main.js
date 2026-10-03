@@ -116,7 +116,9 @@ $(function() {
         const cmdW = 760;
         const aboutW = Math.min(960, window.innerWidth - cmdW - 72);
         $area.find('[data-window-id="welcome"]').css({ left: 'auto', right: '24px', top: '24px', marginLeft: '', marginTop: '', width: cmdW + 'px' });
-        $area.find('[data-window-id="about"]').css({ left: '24px', top: 'auto', bottom: '88px', width: aboutW + 'px', maxWidth: 'none' });
+        const areaH = window.innerHeight - taskbarH;
+        const aboutTop = Math.max(8, areaH - 88 - 540);
+        $area.find('[data-window-id="about"]').css({ left: '24px', top: aboutTop + 'px', bottom: 'auto', width: aboutW + 'px', maxWidth: 'none' });
     };
 
     const dismissLogin = () => {
@@ -405,7 +407,7 @@ $(function() {
             if(!dragging) return;
             if(e.type === 'touchmove') e.preventDefault();
             const c = coords(e);
-            $win.css({ left: (sl + c.x - ox) + 'px', top: (st + c.y - oy) + 'px', right: '', bottom: '', marginLeft: '', marginTop: '' });
+            $win.css({ left: (sl + c.x - ox) + 'px', top: Math.max(0, st + c.y - oy) + 'px', right: '', bottom: '', marginLeft: '', marginTop: '' });
         });
         $(document).on('mouseup touchend', () => {
             if(!dragging) return;
@@ -455,7 +457,7 @@ $(function() {
                 }
                 if(edge === 'n' || edge === 'ne' || edge === 'nw') {
                     h = Math.max(200, height - dy);
-                    t = top + (height - h);
+                    t = Math.max(0, top + (height - h));
                 }
                 el.style.left = l + 'px';
                 el.style.top = t + 'px';
